@@ -35,7 +35,7 @@ export default function CategoriesPage() {
       icon: <GraduationCap className="h-6 w-6 text-primary" />,
       title: "Educational Institutions",
       description: "Find schools, colleges, universities and training centers",
-      href: "/categories/education",
+      href: "/education",
     },
     {
       icon: <Stethoscope className="h-6 w-6 text-primary" />,
