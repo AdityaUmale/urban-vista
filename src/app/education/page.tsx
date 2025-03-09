@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import EduInstituteCard from '../../components/eduInstituteCard';
+import AddEduInstituteForm from '@/components/AddEduInstituteForm';
+import { Toaster } from 'sonner';
 
 interface EduInstitute {
   _id: string;
@@ -19,25 +21,25 @@ export default function EducationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchInstitutes = async () => {
-      try {
-        const response = await fetch('/api/eduInstitutes');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch educational institutes');
-        }
-        
-        const data = await response.json();
-        setInstitutes(data.institutes);
-      } catch (err) {
-        setError('Error loading educational institutes. Please try again later.');
-        console.error('Error fetching institutes:', err);
-      } finally {
-        setLoading(false);
+  const fetchInstitutes = async () => {
+    try {
+      const response = await fetch('/api/eduInstitutes');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch educational institutes');
       }
-    };
+      
+      const data = await response.json();
+      setInstitutes(data.institutes);
+    } catch (err) {
+      setError('Error loading educational institutes. Please try again later.');
+      console.error('Error fetching institutes:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchInstitutes();
   }, []);
 
@@ -65,7 +67,10 @@ export default function EducationPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Educational Institutes</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Educational Institutes</h1>
+        <AddEduInstituteForm onSuccess={fetchInstitutes} />
+      </div>
       
       {institutes.length === 0 ? (
         <p className="text-center">No educational institutes found.</p>
@@ -76,6 +81,7 @@ export default function EducationPage() {
           ))}
         </div>
       )}
+      <Toaster />
     </div>
   );
 }
