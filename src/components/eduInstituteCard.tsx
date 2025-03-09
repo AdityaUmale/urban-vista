@@ -1,4 +1,5 @@
-import { ExternalLink, Mail, MapPin, Phone } from "lucide-react"
+import { useState } from "react"
+import { ExternalLink, Mail, MapPin, Phone, Building2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -20,6 +21,8 @@ interface EduInstituteProps {
 }
 
 export default function EduInstituteCard({ institute }: EduInstituteProps) {
+  const [imageError, setImageError] = useState(false)
+  
   // Extract domain name from website link for display
   const websiteDomain = institute.WebsiteLink ? institute.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") : ""
 
@@ -32,20 +35,28 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
       .toUpperCase()
   }
 
+  // Check if the image URL is a Google search URL
+  const isGoogleSearchUrl = institute.Image?.includes("google.com/url");
+
+  // Determine if we should show the fallback
+  const showFallback = !institute.Image || imageError || isGoogleSearchUrl;
+
   return (
     <Card className="overflow-hidden max-w-md w-full">
-      <div className="relative h-48 w-full">
-        {institute.Image ? (
+      <div className="relative h-48 w-full bg-gray-100">
+        {!showFallback ? (
           <Image
             src={institute.Image}
             alt={institute.name}
             fill
             className="object-cover"
             priority
+            onError={() => setImageError(true)}
           />
         ) : (
-          <div className="bg-gray-200 h-full w-full flex items-center justify-center">
-            <p className="text-gray-500">No image available</p>
+          <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">
+            <Building2 className="h-12 w-12 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500">No image available</p>
           </div>
         )}
       </div>

@@ -11,30 +11,61 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus } from "lucide-react"
+import { Plus, AlertCircle } from "lucide-react"
 import { toast } from "sonner"
 
 interface AddEduInstituteFormProps {
   onSuccess: () => void;
 }
 
+const isValidImageUrl = (url: string) => {
+  if (!url) return true // Allow empty URLs
+  try {
+    const urlObj = new URL(url)
+    const hostname = urlObj.hostname
+    const allowedDomains = [
+      'images.unsplash.com',
+      'upload.wikimedia.org',
+      'www.wikipedia.org',
+      'wikipedia.org',
+      'commons.wikimedia.org',
+      'live.staticflickr.com',
+      'i.imgur.com',
+      'res.cloudinary.com'
+    ]
+    return allowedDomains.some(domain => hostname.includes(domain))
+  } catch {
+    return false
+  }
+}
+
 export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [imageError, setImageError] = useState("")
   const formRef = useRef<HTMLFormElement>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    setImageError("")
 
     const formData = new FormData(e.currentTarget)
+    const imageUrl = formData.get("image") as string
+
+    if (imageUrl && !isValidImageUrl(imageUrl)) {
+      setImageError("Please provide a direct image URL from supported sources (e.g., Unsplash, Wikimedia, Imgur)")
+      setLoading(false)
+      return
+    }
+
     const data = {
       name: formData.get("name"),
       address: formData.get("address"),
       Phone: formData.get("phone"),
       WebsiteLink: formData.get("websiteLink"),
       Description: formData.get("description"),
-      Image: formData.get("image"),
+      Image: imageUrl,
       createdBy: "User", // You can replace this with actual user data
     }
 
@@ -77,7 +108,7 @@ export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormPr
         <DialogHeader>
           <DialogTitle>Add Educational Institute</DialogTitle>
           <DialogDescription>
-            Fill in the details of the educational institute. Click save when you're done.
+            Fill in the details of the educational institute. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -108,7 +139,23 @@ export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormPr
           
           <div className="space-y-2">
             <Label htmlFor="image">Image URL</Label>
-            <Input id="image" name="image" type="url" />
+            <Input 
+              id="image" 
+              name="image" 
+              type="url" 
+              onChange={() => setImageError("")}
+            />
+            {imageError ? (
+              <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                <AlertCircle className="h-4 w-4" />
+                <span>{imageError}</span>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground mt-1">
+                Use direct image URLs from: Unsplash, Wikimedia, Imgur, etc. 
+                Don&apos;t use Google Images search URLs.
+              </p>
+            )}
           </div>
           
           <div className="flex justify-end space-x-2">
