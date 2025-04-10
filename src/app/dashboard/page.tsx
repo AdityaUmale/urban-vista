@@ -53,19 +53,19 @@ export default function CategoriesPage() {
       icon: <Utensils className="h-6 w-6 text-primary" />,
       title: "Food",
       description: "Explore restaurants, cafes and food delivery services",
-      href: "/categories/food",
+      href: "/food",
     },
     {
       icon: <Car className="h-6 w-6 text-primary" />,
       title: "Transportation",
       description: "Find transportation services and vehicle rentals",
-      href: "/categories/transportation",
+      href: "/transportation",
     },
     {
       icon: <ShoppingBag className="h-6 w-6 text-primary" />,
       title: "Shopping",
       description: "Discover retail stores and shopping centers",
-      href: "/categories/shopping",
+      href: "/shopping",
     },
     {
       icon: <Building2 className="h-6 w-6 text-primary" />,
