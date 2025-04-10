@@ -47,7 +47,7 @@ export default function CategoriesPage() {
       icon: <Home className="h-6 w-6 text-primary" />,
       title: "Rental Rooms",
       description: "Browse apartments, houses and rooms for rent",
-      href: "/categories/rentals",
+      href: "/rentals",
     },
     {
       icon: <Utensils className="h-6 w-6 text-primary" />,
