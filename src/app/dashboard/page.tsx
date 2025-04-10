@@ -41,7 +41,7 @@ export default function CategoriesPage() {
       icon: <Stethoscope className="h-6 w-6 text-primary" />,
       title: "Hospitals",
       description: "Discover healthcare facilities and medical services",
-      href: "/categories/hospitals",
+      href: "/hospitals",
     },
     {
       icon: <Home className="h-6 w-6 text-primary" />,
