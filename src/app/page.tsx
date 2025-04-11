@@ -76,23 +76,45 @@ export default function WorldMapDemo() {
           />
         </motion.div>
       </div>
+      <div className="mb-4">
       <AnimatedTestimonials
         testimonials={[
           {
             quote: "This platform has transformed how I work remotely.",
             name: "Sarah Johnson",
             designation: "Digital Nomad",
-            src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330"
+            src: "https://plus.unsplash.com/premium_photo-1682125773446-259ce64f9dd7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZWR1Y2F0aW9ufGVufDB8fDB8fHww"
           },
           {
             quote: "The best solution for remote work I've found.",
             name: "Michael Chen",
             designation: "Software Engineer",
-            src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
+            src: "https://plus.unsplash.com/premium_photo-1666299880508-bffece864e96?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGF0aWVudCUyMGhvc3BpdGFsfGVufDB8fDB8fHww"
+          },
+          {
+            quote: "The best solution for remote work I've found.",
+            name: "Michael Chen",
+            designation: "Software Engineer",
+            src: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudCUyMGZvb2R8ZW58MHx8MHx8fDA%3D"
+          },
+          {
+            quote: "The best solution for remote work I've found.",
+            name: "Michael Chen",
+            designation: "Software Engineer",
+            src: "https://plus.unsplash.com/premium_photo-1683141052679-942eb9e77760?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8d29tYW4lMjBzaG9wcGluZ3xlbnwwfHwwfHx8MA%3D%3D"
+          },
+          {
+            quote: "The best solution for remote work I've found.",
+            name: "Michael Chen",
+            designation: "Software Engineer",
+            src: "https://plus.unsplash.com/premium_photo-1664302152991-d013ff125f3f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YnVzfGVufDB8fDB8fHww"
           }
         ]}
       />
+      </div>
+      <div className="mt-12 pt-8">
       <Footer />
+      </div>
     </div>
   )
 }
