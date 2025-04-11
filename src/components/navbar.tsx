@@ -80,18 +80,22 @@ export default function Navbar() {
 
           <div className="ml-4 flex items-center gap-3">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="ghost"
-                className="rounded-full px-6 hover:bg-white/20 dark:hover:bg-white/10 border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800"
-              >
-                Sign In
-              </Button>
+              <Link href="/signin">
+                <Button
+                  variant="ghost"
+                  className="rounded-full px-6 hover:bg-white/20 dark:hover:bg-white/10 border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800"
+                >
+                  Sign In
+                </Button>
+              </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative group">
               <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-sky-500 to-violet-500 opacity-70 group-hover:opacity-100 blur-sm transition duration-300"></div>
-              <Button className="relative rounded-full px-6 bg-gradient-to-r from-sky-500 to-violet-500 hover:from-sky-600 hover:to-violet-600 text-white border-none">
-                Sign Up
-              </Button>
+              <Link href="/signup">
+                <Button className="relative rounded-full px-6 bg-gradient-to-r from-sky-500 to-violet-500 hover:from-sky-600 hover:to-violet-600 text-white border-none">
+                  Sign Up
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </div>
@@ -129,13 +133,15 @@ export default function Navbar() {
               animate={isMenuOpen ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
               transition={{ duration: 0.3, delay: 0.3 }}
             >
-              <Button
-                variant="ghost"
-                className="w-full rounded-full border border-neutral-200 dark:border-neutral-800"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign In
-              </Button>
+              <Link href="/signin">
+                <Button
+                  variant="ghost"
+                  className="w-full rounded-full border border-neutral-200 dark:border-neutral-800"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Button>
+              </Link>
             </motion.div>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
@@ -144,12 +150,14 @@ export default function Navbar() {
               className="relative group w-full"
             >
               <div className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-sky-500 to-violet-500 opacity-70 group-hover:opacity-100 blur-sm transition duration-300"></div>
-              <Button
-                className="relative w-full rounded-full bg-gradient-to-r from-sky-500 to-violet-500 hover:from-sky-600 hover:to-violet-600 text-white border-none"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign Up
-              </Button>
+              <Link href="/signup">
+                <Button
+                  className="relative w-full rounded-full bg-gradient-to-r from-sky-500 to-violet-500 hover:from-sky-600 hover:to-violet-600 text-white border-none"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign Up
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </motion.div>

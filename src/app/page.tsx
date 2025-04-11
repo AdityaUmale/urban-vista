@@ -17,9 +17,9 @@ export default function WorldMapDemo() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <p className="font-bold text-xl md:text-4xl dark:text-white text-black">
-              Remote{" "}
+              Travel Made{" "}
               <span className="text-neutral-400">
-                {"Connectivity".split("").map((word, idx) => (
+                {"Easy".split("").map((word, idx) => (
                   <motion.span
                     key={idx}
                     className="inline-block"
@@ -33,8 +33,7 @@ export default function WorldMapDemo() {
               </span>
             </p>
             <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
-              Break free from traditional boundaries. Work from anywhere, at the comfort of your own studio apartment.
-              Perfect for Nomads and Travellers.
+            Connecting people with opportunities and services in their community. Making urban living more accessible and efficient.
             </p>
           </motion.div>
         </div>
@@ -80,27 +79,27 @@ export default function WorldMapDemo() {
       <AnimatedTestimonials
         testimonials={[
           {
-            quote: "This platform has transformed how I work remotely.",
-            name: "Sarah Johnson",
-            designation: "Digital Nomad",
+            quote: "connecting people with the Educational Institutes in their community",
+            name: "Educational Institutes",
+            designation: "Find all Educational Institues",
             src: "https://plus.unsplash.com/premium_photo-1682125773446-259ce64f9dd7?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZWR1Y2F0aW9ufGVufDB8fDB8fHww"
           },
           {
-            quote: "The best solution for remote work I've found.",
-            name: "Michael Chen",
-            designation: "Software Engineer",
+            quote: " Connecting people with the Hospitals in their community",
+            name: "Hospitals",
+            designation: "Find all Hospitals",
             src: "https://plus.unsplash.com/premium_photo-1666299880508-bffece864e96?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGF0aWVudCUyMGhvc3BpdGFsfGVufDB8fDB8fHww"
           },
           {
-            quote: "The best solution for remote work I've found.",
-            name: "Michael Chen",
-            designation: "Software Engineer",
+            quote: "Connecting people with the Food Places in their community",
+            name: "Food Places",
+            designation: "Find all Food Places",
             src: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudCUyMGZvb2R8ZW58MHx8MHx8fDA%3D"
           },
           {
-            quote: "The best solution for remote work I've found.",
-            name: "Michael Chen",
-            designation: "Software Engineer",
+            quote: "Connecting people with the Shopping Places in their community",
+            name: "Shopping",
+            designation: "Find Places to Shop",
             src: "https://plus.unsplash.com/premium_photo-1683141052679-942eb9e77760?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8d29tYW4lMjBzaG9wcGluZ3xlbnwwfHwwfHx8MA%3D%3D"
           },
           {
