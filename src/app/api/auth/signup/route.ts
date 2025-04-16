@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     await connectDB();
 
     // Get request body
-    const { name, email, password } = await request.json();
+    const { name, email, password, role } = await request.json();
 
     // Validate input
     if (!name || !email || !password) {
@@ -36,6 +36,7 @@ export async function POST(request: Request) {
       name,
       email,
       password: hashedPassword,
+      role: role || 'user', // Default to 'user' if role is not provided
     });
 
     // Generate token
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        role: newUser.role,
       },
     }, { status: 201 });
   } catch (error) {
