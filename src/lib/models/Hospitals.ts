@@ -7,6 +7,7 @@ const HospitalsSchema = new mongoose.Schema({
     phone: String,
     image: String,
     createdBy: String,
+    city: String,
 });
 
 const Hospitals = mongoose.models.Hospitals || mongoose.model("Hospitals", HospitalsSchema);

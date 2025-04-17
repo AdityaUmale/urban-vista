@@ -29,27 +29,22 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { name, address, phone, website, description, image, services, createdBy } = await request.json();
-    
-    // Validate input
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
-    }
+    const { name, address, Phone, WebsiteLink, Description, Image, city } = await request.json();
     
     // Create new hospital
-    const newHospital = await Hospital.create({
+    const newHospital = new Hospital({
       name,
       address,
-      phone,
-      website,
-      description,
-      image,
-      services,
-      createdBy,
+      Phone,
+      WebsiteLink,
+      Description,
+      Image,
+      city, // Include the city field
+      createdBy: 'anonymous', // Default value
     });
+    
+    // Save to database
+    await newHospital.save();
     
     // Return success response
     return NextResponse.json({ hospital: newHospital }, { status: 201 });
