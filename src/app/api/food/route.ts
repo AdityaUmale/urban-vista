@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { name, address, cuisine, timings, description, image, createdBy } = await request.json();
+    const { name, address, cuisine, timings, description, image, city, createdBy } = await request.json();
     
     // Validate input
     if (!name) {
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
       timings,
       description,
       image,
+      city,
       createdBy,
     });
     

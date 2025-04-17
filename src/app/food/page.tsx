@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import FoodCard from '@/components/FoodCard';
+import FoodCard from '../../components/FoodCard';
 import AddFoodForm from '@/components/AddFoodForm';
 import { Toaster } from 'sonner';
 
@@ -9,17 +9,19 @@ interface Food {
   _id: string;
   name: string;
   address: string;
-  cuisine: string;
-  timings: string;
-  description: string;
-  image: string;
+  Phone: string;
+  WebsiteLink: string;
+  Description: string;
+  Image: string;
   createdBy: string;
+  city: string; // Added city field
 }
 
 export default function FoodPage() {
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string>('all');
 
   const fetchFoods = async () => {
     try {
@@ -30,10 +32,10 @@ export default function FoodPage() {
       }
       
       const data = await response.json();
-      setFoods(data.foods || []);
+      setFoods(data.foods);
     } catch (err) {
       setError('Error loading food places. Please try again later.');
-      console.error('Error fetching food places:', err);
+      console.error('Error fetching foods:', err);
     } finally {
       setLoading(false);
     }
@@ -42,6 +44,14 @@ export default function FoodPage() {
   useEffect(() => {
     fetchFoods();
   }, []);
+
+  // Get unique cities from foods
+  const cities = ['all', ...new Set(foods.map(food => food.city || 'Unknown'))];
+  
+  // Filter foods by selected city
+  const filteredFoods = selectedCity === 'all' 
+    ? foods 
+    : foods.filter(food => food.city === selectedCity);
 
   if (loading) {
     return (
@@ -72,11 +82,30 @@ export default function FoodPage() {
         <AddFoodForm onSuccess={fetchFoods} />
       </div>
       
-      {foods.length === 0 ? (
-        <p className="text-center">No food places found.</p>
+      {/* City filter dropdown */}
+      <div className="mb-6">
+        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          Filter by City:
+        </label>
+        <select
+          id="city-filter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city === 'all' ? 'All Cities' : city}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      {filteredFoods.length === 0 ? (
+        <p className="text-center">No food places found for the selected city.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {foods.map((food) => (
+          {filteredFoods.map((food) => (
             <FoodCard key={food._id} food={food} />
           ))}
         </div>
