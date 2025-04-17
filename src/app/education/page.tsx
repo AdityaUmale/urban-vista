@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import EduInstituteCard from '../../components/eduInstituteCard';
 import AddEduInstituteForm from '@/components/AddEduInstituteForm';
 import { Toaster } from 'sonner';
+import { getCurrentUser } from '@/lib/auth';
 
 interface EduInstitute {
   _id: string;
@@ -20,6 +21,8 @@ export default function EducationPage() {
   const [institutes, setInstitutes] = useState<EduInstitute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const user = getCurrentUser();
 
   const fetchInstitutes = async () => {
     try {
@@ -70,6 +73,10 @@ export default function EducationPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Educational Institutes</h1>
         <AddEduInstituteForm onSuccess={fetchInstitutes} />
+      </div>
+      <div>
+        user.role
+        user.sub
       </div>
       
       {institutes.length === 0 ? (

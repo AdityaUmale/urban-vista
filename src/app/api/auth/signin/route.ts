@@ -38,19 +38,22 @@ export async function POST(request: Request) {
     }
 
     // Generate token
-    const token = generateToken(user._id.toString());
+    const token = generateToken({ id: user._id.toString(), role: user.role })
 
-    // Set cookie
-    setAuthCookie(token);
-
-    // Return success response (without password)
-    return NextResponse.json({
+    // Build your response, then set the cookie on it
+    const response = NextResponse.json({
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
-    });
+    }, { status: 201 })
+  
+    // Pass both the response and token to setAuthCookie
+    setAuthCookie(response, token)
+  
+    return response
   } catch (error) {
     console.error('Signin error:', error);
     return NextResponse.json(

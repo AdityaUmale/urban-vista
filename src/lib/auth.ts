@@ -23,10 +23,11 @@ export async function verifyPassword(
 }
 
 // Generate JWT token
-export function generateToken(userId: string): string {
+export function generateToken(payload: { id: string; role: string }): string {
   return jwt.sign(
     {
-      sub: userId,
+          sub: payload.id,
+          role: payload.role,
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -36,6 +37,7 @@ export function generateToken(userId: string): string {
 // Define a type for the token payload
 type TokenPayload = {
   sub: string;
+  role: string;
   iat: number;
   exp: number;
 };
@@ -50,9 +52,8 @@ export function verifyToken(token: string): TokenPayload | null {
 }
 
 // Set auth cookie
-export async function setAuthCookie(token: string): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set({
+export function setAuthCookie(response: any, token: string): any {
+  response.cookies.set({
     name: 'authToken',
     value: token,
     httpOnly: true,
@@ -60,6 +61,8 @@ export async function setAuthCookie(token: string): Promise<void> {
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: '/',
   });
+  
+  return response;
 }
 
 // Get auth cookie

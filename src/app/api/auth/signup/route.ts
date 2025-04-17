@@ -40,20 +40,22 @@ export async function POST(request: Request) {
     });
 
     // Generate token
-    const token = generateToken(newUser._id.toString());
+    const token = generateToken({ id: newUser._id.toString(), role: newUser.role })
 
-    // Set cookie
-    setAuthCookie(token);
+  // Build your response, then set the cookie on it
+  const response = NextResponse.json({
+    user: {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+    },
+  }, { status: 201 })
 
-    // Return success response (without password)
-    return NextResponse.json({
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role,
-      },
-    }, { status: 201 });
+  // setAuthCookie should accept the response and mutate its cookies
+  setAuthCookie(token)
+
+  return response
   } catch (error) {
     console.error('Signup error:', error);
     return NextResponse.json(
