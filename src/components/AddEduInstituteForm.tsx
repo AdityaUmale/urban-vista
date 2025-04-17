@@ -1,178 +1,226 @@
-import { useState, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Plus, AlertCircle } from "lucide-react"
-import { toast } from "sonner"
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface AddEduInstituteFormProps {
   onSuccess: () => void;
 }
 
-const isValidImageUrl = (url: string) => {
-  if (!url) return true // Allow empty URLs
-  try {
-    const urlObj = new URL(url)
-    const hostname = urlObj.hostname
-    const allowedDomains = [
-      'images.unsplash.com',
-      'upload.wikimedia.org',
-      'www.wikipedia.org',
-      'wikipedia.org',
-      'commons.wikimedia.org',
-      'live.staticflickr.com',
-      'i.imgur.com',
-      'res.cloudinary.com'
-    ]
-    return allowedDomains.some(domain => hostname.includes(domain))
-  } catch {
-    return false
-  }
+interface FormData {
+  name: string;
+  address: string;
+  Phone: string;
+  WebsiteLink: string;
+  Description: string;
+  Image: string;
+  city: string;
 }
 
 export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormProps) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [imageError, setImageError] = useState("")
-  const formRef = useRef<HTMLFormElement>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    address: '',
+    Phone: '',
+    WebsiteLink: '',
+    Description: '',
+    Image: '',
+    city: '',
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setImageError("")
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-    const formData = new FormData(e.currentTarget)
-    const imageUrl = formData.get("image") as string
-
-    if (imageUrl && !isValidImageUrl(imageUrl)) {
-      setImageError("Please provide a direct image URL from supported sources (e.g., Unsplash, Wikimedia, Imgur)")
-      setLoading(false)
-      return
-    }
-
-    const data = {
-      name: formData.get("name"),
-      address: formData.get("address"),
-      Phone: formData.get("phone"),
-      WebsiteLink: formData.get("websiteLink"),
-      Description: formData.get("description"),
-      Image: imageUrl,
-      createdBy: "User", // You can replace this with actual user data
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/eduInstitutes", {
-        method: "POST",
+      const response = await fetch('/api/eduInstitutes', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
-      })
+        body: JSON.stringify(formData),
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to create institute")
+        throw new Error('Failed to add educational institute');
       }
 
-      toast.success("Educational institute has been created successfully")
-      if (formRef.current) {
-        formRef.current.reset()
-      }
-      setOpen(false)
-      onSuccess()
+      // Reset form and close modal
+      setFormData({
+        name: '',
+        address: '',
+        Phone: '',
+        WebsiteLink: '',
+        Description: '',
+        Image: '',
+        city: '',
+      });
+      setIsOpen(false);
+      
+      // Show success message
+      toast.success('Educational institute added successfully!');
+      
+      // Refresh the list
+      onSuccess();
     } catch (error) {
-      console.error("Error creating educational institute:", error)
-      toast.error("Failed to create educational institute. Please try again.")
+      console.error('Error adding educational institute:', error);
+      toast.error('Failed to add educational institute. Please try again.');
     } finally {
-      setLoading(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="mb-6">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Institute
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add Educational Institute</DialogTitle>
-          <DialogDescription>
-            Fill in the details of the educational institute. Click save when you&apos;re done.
-          </DialogDescription>
-        </DialogHeader>
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
-            <Input id="name" name="name" required />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input id="address" name="address" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" name="phone" type="tel" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="websiteLink">Website Link</Label>
-            <Input id="websiteLink" name="websiteLink" type="url" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" name="description" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
-            <Input 
-              id="image" 
-              name="image" 
-              type="url" 
-              onChange={() => setImageError("")}
-            />
-            {imageError ? (
-              <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
-                <AlertCircle className="h-4 w-4" />
-                <span>{imageError}</span>
+    <div>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+      >
+        Add Institute
+      </button>
+
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4">Add Educational Institute</h2>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground mt-1">
-                Use direct image URLs from: Unsplash, Wikimedia, Imgur, etc. 
-                Don&apos;t use Google Images search URLs.
-              </p>
-            )}
+
+              <div className="mb-4">
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="Phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  id="Phone"
+                  name="Phone"
+                  value={formData.Phone}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="WebsiteLink" className="block text-sm font-medium text-gray-700 mb-1">
+                  Website Link
+                </label>
+                <input
+                  type="url"
+                  id="WebsiteLink"
+                  name="WebsiteLink"
+                  value={formData.WebsiteLink}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="Description" className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
+                <textarea
+                  id="Description"
+                  name="Description"
+                  value={formData.Description}
+                  onChange={handleChange}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="Image" className="block text-sm font-medium text-gray-700 mb-1">
+                  Image URL
+                </label>
+                <input
+                  type="url"
+                  id="Image"
+                  name="Image"
+                  value={formData.Image}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                  City
+                </label>
+                <select
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                >
+                  <option value="">Select a city</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Pune">Pune</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Adding...' : 'Add Institute'}
+                </button>
+              </div>
+            </form>
           </div>
-          
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create Institute"}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  )
-} 
+        </div>
+      )}
+    </div>
+  );
+}

@@ -8,6 +8,7 @@ const EduInstituteSchema = new mongoose.Schema({
     Description: String,
     Image: String,
     createdBy: String,
+    city: String, // Added city field
 });
 
 const EduInstitute = mongoose.models.EduInstitute || mongoose.model('EduInstitute', EduInstituteSchema);

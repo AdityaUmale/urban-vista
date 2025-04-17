@@ -14,13 +14,14 @@ interface EduInstitute {
   Description: string;
   Image: string;
   createdBy: string;
+  city: string; // Added city field
 }
 
 export default function EducationPage() {
   const [institutes, setInstitutes] = useState<EduInstitute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [selectedCity, setSelectedCity] = useState<string>('all');
 
   const fetchInstitutes = async () => {
     try {
@@ -43,6 +44,14 @@ export default function EducationPage() {
   useEffect(() => {
     fetchInstitutes();
   }, []);
+
+  // Get unique cities from institutes
+  const cities = ['all', ...new Set(institutes.map(institute => institute.city || 'Unknown'))];
+  
+  // Filter institutes by selected city
+  const filteredInstitutes = selectedCity === 'all' 
+    ? institutes 
+    : institutes.filter(institute => institute.city === selectedCity);
 
   if (loading) {
     return (
@@ -73,11 +82,30 @@ export default function EducationPage() {
         <AddEduInstituteForm onSuccess={fetchInstitutes} />
       </div>
       
-      {institutes.length === 0 ? (
-        <p className="text-center">No educational institutes found.</p>
+      {/* City filter dropdown */}
+      <div className="mb-6">
+        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          Filter by City:
+        </label>
+        <select
+          id="city-filter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city === 'all' ? 'All Cities' : city}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      {filteredInstitutes.length === 0 ? (
+        <p className="text-center">No educational institutes found for the selected city.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {institutes.map((institute) => (
+          {filteredInstitutes.map((institute) => (
             <EduInstituteCard key={institute._id} institute={institute} />
           ))}
         </div>

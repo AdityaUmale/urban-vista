@@ -53,7 +53,7 @@ export async function POST(request: Request) {
   }, { status: 201 })
 
   // setAuthCookie should accept the response and mutate its cookies
-  setAuthCookie(token)
+  setAuthCookie(response, token)
 
   return response
   } catch (error) {

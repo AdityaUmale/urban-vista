@@ -29,26 +29,22 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { name, address, Phone, WebsiteLink, Description, Image, createdBy } = await request.json();
+    const { name, address, Phone, WebsiteLink, Description, Image, city } = await request.json();
     
-    // Validate input
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
-    }
-    
-    // Create new educational institute
-    const newInstitute = await EduInstitute.create({
+    // Create new institute
+    const newInstitute = new EduInstitute({
       name,
       address,
       Phone,
       WebsiteLink,
       Description,
       Image,
-      createdBy,
+      city,
+      createdBy: 'anonymous', // Default value since we don't have user authentication yet
     });
+    
+    // Save to database
+    await newInstitute.save();
     
     // Return success response
     return NextResponse.json({ institute: newInstitute }, { status: 201 });
