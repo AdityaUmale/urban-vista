@@ -29,25 +29,21 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { name, address, price, description, image, createdBy } = await request.json();
-    
-    // Validate input
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
-    }
+    const { name, address, price, description, image, city } = await request.json();
     
     // Create new rental
-    const newRental = await Rental.create({
+    const newRental = new Rental({
       name,
       address,
       price,
       description,
       image,
-      createdBy,
+      city, // Make sure city is included here
+      createdBy: 'anonymous',
     });
+    
+    // Save to database
+    await newRental.save();
     
     // Return success response
     return NextResponse.json({ rental: newRental }, { status: 201 });
@@ -58,4 +54,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

@@ -13,12 +13,14 @@ interface Rental {
   description: string;
   image: string;
   createdBy: string;
+  city: string; // Added city field
 }
 
 export default function RentalsPage() {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string>('all'); // Added city filter state
 
   const fetchRentals = async () => {
     try {
@@ -29,6 +31,7 @@ export default function RentalsPage() {
       }
       
       const data = await response.json();
+      console.log('API response data:', data); // Log the API response
       setRentals(data.rentals || []);
     } catch (err) {
       setError('Error loading rentals. Please try again later.');
@@ -41,6 +44,26 @@ export default function RentalsPage() {
   useEffect(() => {
     fetchRentals();
   }, []);
+  
+  // Improved city extraction logic
+  const availableCities = rentals
+    .map(rental => rental.city)
+    .filter(city => city && city.trim() !== '');
+  
+  console.log('Available cities:', availableCities);
+  
+  // Get unique cities from rentals with better filtering
+  const cities = ['all', ...new Set(availableCities)];
+  
+  console.log('City options:', cities);
+    
+  // Filter rentals by selected city
+  const filteredRentals = selectedCity === 'all' 
+    ? rentals 
+    : rentals.filter(rental => rental.city === selectedCity);
+  
+  // Add this console log to see filtered rentals
+  console.log('Filtered rentals:', filteredRentals);
 
   if (loading) {
     return (
@@ -71,11 +94,30 @@ export default function RentalsPage() {
         <AddRentalForm onSuccess={fetchRentals} />
       </div>
       
-      {rentals.length === 0 ? (
-        <p className="text-center">No rental properties found.</p>
+      {/* City filter dropdown */}
+      <div className="mb-6">
+        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          Filter by City:
+        </label>
+        <select
+          id="city-filter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city === 'all' ? 'All Cities' : city}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      {filteredRentals.length === 0 ? (
+        <p className="text-center">No rental properties found for the selected city.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rentals.map((rental) => (
+          {filteredRentals.map((rental) => (
             <RentalCard key={rental._id} rental={rental} />
           ))}
         </div>

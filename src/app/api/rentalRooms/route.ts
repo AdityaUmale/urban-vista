@@ -29,42 +29,21 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { 
-      title, 
-      description, 
-      address, 
-      price, 
-      bedrooms, 
-      bathrooms, 
-      amenities, 
-      images, 
-      contactPhone, 
-      contactEmail,
-      createdBy 
-    } = await request.json();
-    
-    // Validate input
-    if (!title || !price) {
-      return NextResponse.json(
-        { error: 'Title and price are required' },
-        { status: 400 }
-      );
-    }
+    const { name, description, address, phone, image, city } = await request.json();
     
     // Create new rental room
-    const newRentalRoom = await RentalRoom.create({
-      title,
+    const newRentalRoom = new RentalRoom({
+      name,
       description,
       address,
-      price,
-      bedrooms,
-      bathrooms,
-      amenities,
-      images,
-      contactPhone,
-      contactEmail,
-      createdBy
+      phone,
+      image,
+      city, // Include the city field
+      createdBy: 'anonymous', // Default value
     });
+    
+    // Save to database
+    await newRentalRoom.save();
     
     // Return success response
     return NextResponse.json({ rentalRoom: newRentalRoom }, { status: 201 });
