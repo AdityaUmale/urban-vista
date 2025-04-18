@@ -74,95 +74,111 @@ export default async function InstituteDetailPage({
   const showFallback = !institute.Image || isGoogleSearchUrl;
 
   return (
-    <div className="container max-w-4xl py-8">
-      <Link href="/education" className="flex items-center text-primary mb-6 hover:underline">
+    <div className="container py-12 max-w-6xl ml-32">
+      <Link href="/education" className="inline-flex items-center text-primary mb-10 hover:underline font-medium transition-colors">
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to all institutes
       </Link>
       
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="relative h-64 w-full bg-gray-100">
-          {!showFallback ? (
-            <Image
-              src={institute.Image}
-              alt={institute.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          ) : (
-            <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">
-              <Building2 className="h-16 w-16 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-500">No image available</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Left column - Image and basic info */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8 border border-gray-100">
+            <div className="relative aspect-square w-full bg-gray-50">
+              {!showFallback ? (
+                <Image
+                  src={institute.Image}
+                  alt={institute.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="h-full w-full flex flex-col items-center justify-center bg-gray-50">
+                  <Building2 className="h-20 w-20 text-gray-300 mb-3" />
+                  <p className="text-sm text-gray-400 font-medium">No image available</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">Contact Information</h2>
+            <div className="space-y-5">
+              {institute.Phone && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <Phone className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{institute.Phone}</span>
+                </div>
+              )}
+              
+              {institute.WebsiteLink && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <ExternalLink className="h-5 w-5 text-primary" />
+                  </div>
+                  <a
+                    href={institute.WebsiteLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    {websiteDomain}
+                  </a>
+                </div>
+              )}
+              
+              <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
+                <Mail className="h-4 w-4 mr-2" />
+                Contact Institute
+              </Button>
+            </div>
+          </div>
         </div>
         
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold">{institute.name}</h1>
-              <div className="flex items-center text-muted-foreground mt-2">
-                <MapPin className="h-5 w-5 mr-2" />
-                <span>{institute.address}</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Avatar className="h-12 w-12">
-                <AvatarFallback>{getInitials(institute.name)}</AvatarFallback>
-              </Avatar>
+        {/* Right column - Details */}
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm p-8 mb-8 border border-gray-100">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-8">
               <div>
-                <p className="text-xs text-muted-foreground">Created by</p>
-                <p className="font-medium">{institute.createdBy}</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">{institute.name}</h1>
+                <div className="flex items-center text-gray-500 mt-2">
+                  <MapPin className="h-5 w-5 mr-2 text-primary/70" />
+                  <span>{institute.address}</span>
+                </div>
               </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-b py-6 my-6">
-            <h2 className="text-xl font-semibold mb-4">About</h2>
-            <p className="text-muted-foreground whitespace-pre-wrap">
-              {institute.Description || 'No description available'}
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-              <div className="space-y-4">
-                {institute.Phone && (
-                  <div className="flex items-center">
-                    <Phone className="h-5 w-5 mr-3 text-muted-foreground" />
-                    <span>{institute.Phone}</span>
-                  </div>
-                )}
-                
-                {institute.WebsiteLink && (
-                  <div className="flex items-center">
-                    <ExternalLink className="h-5 w-5 mr-3 text-muted-foreground" />
-                    <a
-                      href={institute.WebsiteLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      {websiteDomain}
-                    </a>
-                  </div>
-                )}
-                
-                <Button className="mt-4">
-                  <Mail className="h-4 w-4 mr-2" />
-                  Contact Institute
-                </Button>
+              
+              <div className="flex items-center space-x-3 mt-6 md:mt-0 bg-gray-50 p-3 rounded-lg">
+                <Avatar className="h-14 w-14 border-2 border-white shadow-sm">
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                    {getInitials(institute.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Created by</p>
+                  <p className="font-medium text-gray-800">{institute.createdBy}</p>
+                </div>
               </div>
             </div>
             
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Location</h2>
-              <div className="bg-gray-100 rounded-md h-48 flex items-center justify-center">
-                <MapPin className="h-8 w-8 text-gray-400" />
-                <span className="ml-2 text-gray-500">Map view not available</span>
+            <div className="border-t border-gray-100 pt-8">
+              <h2 className="text-xl font-semibold mb-5 text-gray-800">About</h2>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {institute.Description || 'No description available'}
+              </p>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+            <h2 className="text-xl font-semibold mb-5 text-gray-800">Location</h2>
+            <div className="bg-gray-50 rounded-lg h-72 flex items-center justify-center border border-gray-100">
+              <div className="text-center">
+                <div className="bg-primary/10 p-4 rounded-full inline-flex mb-3">
+                  <MapPin className="h-8 w-8 text-primary/70" />
+                </div>
+                <p className="text-gray-500">Interactive map coming soon</p>
               </div>
             </div>
           </div>
