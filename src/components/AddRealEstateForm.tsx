@@ -1,100 +1,100 @@
-'use client';
+"use client"
 
-import { useState, useRef } from "react"
+import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { Building2, Plus } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, AlertCircle } from "lucide-react"
 import { toast } from "sonner"
 
-interface AddRealEstateFormProps {
-  onSuccess: () => void;
-}
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  address: z.string().min(5, {
+    message: "Address must be at least 5 characters.",
+  }),
+  price: z.string().min(1, {
+    message: "Price is required.",
+  }),
+  type: z.string().min(2, {
+    message: "Type must be at least 2 characters.",
+  }),
+  description: z.string().min(10, {
+    message: "Description must be at least 10 characters.",
+  }),
+  image: z.string().url({
+    message: "Please enter a valid URL.",
+  }).optional().or(z.literal('')),
+})
 
-const isValidImageUrl = (url: string) => {
-  if (!url) return true // Allow empty URLs
-  try {
-    const urlObj = new URL(url)
-    const hostname = urlObj.hostname
-    const allowedDomains = [
-      'images.unsplash.com',
-      'upload.wikimedia.org',
-      'www.wikipedia.org',
-      'wikipedia.org',
-      'commons.wikimedia.org',
-      'live.staticflickr.com',
-      'i.imgur.com',
-      'res.cloudinary.com'
-    ]
-    return allowedDomains.some(domain => hostname.includes(domain))
-  } catch {
-    return false
-  }
+interface AddRealEstateFormProps {
+  onSuccess?: () => void
 }
 
 export default function AddRealEstateForm({ onSuccess }: AddRealEstateFormProps) {
   const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [imageError, setImageError] = useState(false)
-  const formRef = useRef<HTMLFormElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setImageError(false)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      address: "",
+      price: "",
+      type: "",
+      description: "",
+      image: "",
+    },
+  })
 
-    const formData = new FormData(e.currentTarget as HTMLFormElement)
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true)
     try {
-      // Validate image URL before submitting
-      if (!isValidImageUrl(formData.get("image") as string)) {
-        setImageError(true)
-        toast({
-          title: "Invalid Image URL",
-          description: "Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary",
-          variant: "destructive",
-        })
-        return
-      }
-
       const response = await fetch("/api/real-estate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(Object.fromEntries(formData.entries())),
+        body: JSON.stringify(values),
       })
-
-      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create real estate property")
+        throw new Error("Failed to add property")
       }
 
-      toast({
-        title: "Success",
-        description: "Real estate property added successfully",
-      })
+      toast.success("Property added successfully!")
+      form.reset()
       setOpen(false)
-      onSuccess()
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (error) {
-      console.error("Error creating real estate property:", error)
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create real estate property",
-        variant: "destructive",
-      })
+      console.error("Error adding property:", error)
+      toast.error("Failed to add property. Please try again.")
     } finally {
-      setLoading(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -102,80 +102,118 @@ export default function AddRealEstateForm({ onSuccess }: AddRealEstateFormProps)
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="mr-2 h-4 w-4" />
           Add Property
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Real Estate Property</DialogTitle>
+          <DialogTitle>Add New Property</DialogTitle>
           <DialogDescription>
-            Fill in the details of the property. Click save when you&apos;re done.
+            Fill in the details to add a new real estate property.
           </DialogDescription>
         </DialogHeader>
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
-            <Input id="name" name="name" required />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input id="address" name="address" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="type">Type</Label>
-            <Input id="type" name="type" placeholder="e.g., Apartment, House, Villa" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="price">Price</Label>
-            <Input id="price" name="price" type="number" placeholder="e.g., 500000" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" name="description" />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="image">Image URL</Label>
-            <Input 
-              id="image" 
-              name="image" 
-              type="url" 
-              onChange={() => setImageError(false)}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Property Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter property name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {imageError && (
-              <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
-                <AlertCircle className="h-4 w-4" />
-                <span>Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary</span>
-              </div>
-            )}
-            {!imageError && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Use direct image URLs from: Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary. 
-                Don&apos;t use Google Images search URLs.
-              </p>
-            )}
-          </div>
-          
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Creating..." : "Create Property"}
-            </Button>
-          </div>
-        </form>
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter property address" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. $500,000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Property Type</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. Apartment, House" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe the property..."
+                      className="resize-none min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter image URL" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Building2 className="mr-2 h-4 w-4 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  "Add Property"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )
-} 
+}

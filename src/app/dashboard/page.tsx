@@ -1,5 +1,5 @@
 import type React from "react"
-import { GraduationCap, Building2, Home, Utensils, Car, ShoppingBag, Stethoscope, Briefcase } from "lucide-react"
+import { GraduationCap, Building2, Home, Utensils, Car, Stethoscope, Briefcase } from "lucide-react"
 import Link from "next/link"
 
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -60,12 +60,6 @@ export default function CategoriesPage() {
       title: "Transportation",
       description: "Find transportation services and vehicle rentals",
       href: "/transportation",
-    },
-    {
-      icon: <ShoppingBag className="h-6 w-6 text-primary" />,
-      title: "Shopping",
-      description: "Discover retail stores and shopping centers",
-      href: "/shopping",
     },
     {
       icon: <Building2 className="h-6 w-6 text-primary" />,
