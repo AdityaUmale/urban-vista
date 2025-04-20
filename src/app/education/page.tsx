@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import EduInstituteCard from '../../components/eduInstituteCard';
 import AddEduInstituteForm from '@/components/AddEduInstituteForm';
 import { Toaster } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 interface EduInstitute {
   _id: string;
@@ -22,6 +24,7 @@ export default function EducationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const fetchInstitutes = async () => {
     try {
@@ -48,10 +51,15 @@ export default function EducationPage() {
   // Get unique cities from institutes
   const cities = ['all', ...new Set(institutes.map(institute => institute.city || 'Unknown'))];
   
-  // Filter institutes by selected city
-  const filteredInstitutes = selectedCity === 'all' 
-    ? institutes 
-    : institutes.filter(institute => institute.city === selectedCity);
+  // Filter institutes by selected city and search query
+  const filteredInstitutes = institutes
+    .filter(institute => selectedCity === 'all' || institute.city === selectedCity)
+    .filter(institute => 
+      searchQuery === '' || 
+      institute.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institute.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      institute.Description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   if (loading) {
     return (
@@ -82,6 +90,20 @@ export default function EducationPage() {
         <AddEduInstituteForm onSuccess={fetchInstitutes} />
       </div>
       
+      {/* Search bar */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search institutes by name, address, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 w-full"
+          />
+        </div>
+      </div>
+      
       {/* City filter dropdown */}
       <div className="mb-6">
         <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
@@ -102,7 +124,11 @@ export default function EducationPage() {
       </div>
       
       {filteredInstitutes.length === 0 ? (
-        <p className="text-center">No educational institutes found for the selected city.</p>
+        <p className="text-center">
+          {searchQuery 
+            ? "No educational institutes found matching your search." 
+            : "No educational institutes found for the selected city."}
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredInstitutes.map((institute) => (

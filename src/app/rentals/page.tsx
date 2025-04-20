@@ -1,26 +1,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import RentalCard from '@/components/RentalCard';
+import RentalCard from '../../components/RentalCard';
 import AddRentalForm from '@/components/AddRentalForm';
 import { Toaster } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 interface Rental {
   _id: string;
   name: string;
   address: string;
-  price: string;
+  price: number;
+  type: string;
   description: string;
   image: string;
   createdBy: string;
-  city: string; // Added city field
+  city: string;
 }
 
 export default function RentalsPage() {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<string>('all'); // Added city filter state
+  const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const fetchRentals = async () => {
     try {
@@ -31,7 +35,6 @@ export default function RentalsPage() {
       }
       
       const data = await response.json();
-      console.log('API response data:', data); // Log the API response
       setRentals(data.rentals || []);
     } catch (err) {
       setError('Error loading rentals. Please try again later.');
@@ -44,33 +47,27 @@ export default function RentalsPage() {
   useEffect(() => {
     fetchRentals();
   }, []);
+
+  // Get unique cities from rentals
+  const cities = ['all', ...new Set(rentals.map(rental => rental.city || 'Unknown'))];
   
-  // Improved city extraction logic
-  const availableCities = rentals
-    .map(rental => rental.city)
-    .filter(city => city && city.trim() !== '');
-  
-  console.log('Available cities:', availableCities);
-  
-  // Get unique cities from rentals with better filtering
-  const cities = ['all', ...new Set(availableCities)];
-  
-  console.log('City options:', cities);
-    
-  // Filter rentals by selected city
-  const filteredRentals = selectedCity === 'all' 
-    ? rentals 
-    : rentals.filter(rental => rental.city === selectedCity);
-  
-  // Add this console log to see filtered rentals
-  console.log('Filtered rentals:', filteredRentals);
+  // Filter rentals by selected city and search query
+  const filteredRentals = rentals
+    .filter(rental => selectedCity === 'all' || rental.city === selectedCity)
+    .filter(rental => 
+      searchQuery === '' || 
+      (rental.name && rental.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (rental.address && rental.address.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (rental.description && rental.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (rental.type && rental.type.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
   if (loading) {
     return (
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-6">Rental Properties</h1>
         <div className="flex justify-center items-center min-h-[50vh]">
-          <p>Loading rentals...</p>
+          <p>Loading rental properties...</p>
         </div>
       </div>
     );
@@ -94,6 +91,20 @@ export default function RentalsPage() {
         <AddRentalForm onSuccess={fetchRentals} />
       </div>
       
+      {/* Search bar */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search rentals by name, address, type, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 w-full"
+          />
+        </div>
+      </div>
+      
       {/* City filter dropdown */}
       <div className="mb-6">
         <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
@@ -114,7 +125,11 @@ export default function RentalsPage() {
       </div>
       
       {filteredRentals.length === 0 ? (
-        <p className="text-center">No rental properties found for the selected city.</p>
+        <p className="text-center">
+          {searchQuery 
+            ? "No rental properties found matching your search." 
+            : "No rental properties found for the selected city."}
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRentals.map((rental) => (

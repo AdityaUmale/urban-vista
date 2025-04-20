@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import FoodCard from '../../components/FoodCard';
 import AddFoodForm from '@/components/AddFoodForm';
 import { Toaster } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 interface Food {
   _id: string;
@@ -22,6 +24,7 @@ export default function FoodPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const fetchFoods = async () => {
     try {
@@ -48,10 +51,15 @@ export default function FoodPage() {
   // Get unique cities from foods
   const cities = ['all', ...new Set(foods.map(food => food.city || 'Unknown'))];
   
-  // Filter foods by selected city
-  const filteredFoods = selectedCity === 'all' 
-    ? foods 
-    : foods.filter(food => food.city === selectedCity);
+  // Filter foods by selected city and search query
+  const filteredFoods = foods
+    .filter(food => selectedCity === 'all' || food.city === selectedCity)
+    .filter(food => 
+      searchQuery === '' || 
+      (food.name && food.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (food.address && food.address.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (food.Description && food.Description.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
   if (loading) {
     return (
@@ -75,11 +83,36 @@ export default function FoodPage() {
     );
   }
 
+  // Remove this duplicate filtering logic that uses the undefined foodPlaces variable
+  // const filteredFoodPlaces = foodPlaces
+  //   .filter(place => selectedCity === 'all' || place.city === selectedCity)
+  //   .filter(place => 
+  //     searchQuery === '' || 
+  //     (place.name && place.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  //     (place.address && place.address.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  //     (place.description && place.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  //     (place.cuisine && place.cuisine.toLowerCase().includes(searchQuery.toLowerCase()))
+  //   );
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Food Places</h1>
         <AddFoodForm onSuccess={fetchFoods} />
+      </div>
+      
+      {/* Search bar */}
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search food places by name, cuisine, address, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 w-full"
+          />
+        </div>
       </div>
       
       {/* City filter dropdown */}
@@ -102,7 +135,11 @@ export default function FoodPage() {
       </div>
       
       {filteredFoods.length === 0 ? (
-        <p className="text-center">No food places found for the selected city.</p>
+        <p className="text-center">
+          {searchQuery 
+            ? "No food places found matching your search." 
+            : "No food places found for the selected city."}
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredFoods.map((food) => (
