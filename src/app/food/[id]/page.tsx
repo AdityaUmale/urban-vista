@@ -40,12 +40,7 @@ async function getFoodPlaceById(id: string) {
   }
 }
 
-export default async function FoodDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
-  // Fix for the params warning - use Promise.resolve to ensure params is awaited
+export default async function FoodDetailPage({ params }: { params: { id: string } }) {
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;
   
@@ -58,25 +53,20 @@ export default async function FoodDetailPage({
   if (!foodPlace) {
     notFound();
   }
-  
-  // Extract domain name from website link for display
-  const websiteDomain = foodPlace.WebsiteLink 
-    ? foodPlace.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
-    : "";
-  
-  // Get initials for avatar fallback
-  const getInitials = (name: string) => {
+
+  // Add getInitials function
+  const getInitials = (name: string = "") => {
+    if (!name) return "";
     return name
       .split(" ")
       .map((part) => part[0])
       .join("")
       .toUpperCase();
   };
-  
-  // Check if the image URL is a Google search URL
-  const isGoogleSearchUrl = foodPlace.Image?.includes("google.com/url");
-  const showFallback = !foodPlace.Image || isGoogleSearchUrl;
 
+  const isGoogleSearchUrl = foodPlace.image?.includes("google.com/url");
+  const showFallback = !foodPlace.image || isGoogleSearchUrl;
+  
   return (
     <div className="container py-12 max-w-6xl mx-auto">
       <Link href="/food" className="inline-flex items-center text-primary mb-10 hover:underline font-medium transition-colors">
@@ -91,7 +81,7 @@ export default async function FoodDetailPage({
             <div className="relative aspect-square w-full bg-gray-50">
               {!showFallback ? (
                 <Image
-                  src={foodPlace.Image}
+                  src={foodPlace.image}  // Changed from Image to image
                   alt={foodPlace.name}
                   fill
                   className="object-cover"
@@ -104,6 +94,46 @@ export default async function FoodDetailPage({
                 </div>
               )}
             </div>
+            
+            {/* Update other property references */}
+            {foodPlace.phone && (  // Changed from Phone to phone
+              <div className="flex items-center group">
+                <Phone className="h-5 w-5 text-primary" />
+                <span>{foodPlace.phone}</span>
+              </div>
+            )}
+            
+            {foodPlace.websiteLink && (  // Changed from WebsiteLink to websiteLink
+              <div className="flex items-center group">
+                <div className="bg-primary/10 p-3 rounded-full mr-4">
+                  <ExternalLink className="h-5 w-5 text-primary" />
+                </div>
+                <a
+                  href={foodPlace.WebsiteLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary/80 transition-colors"
+                >
+                  {websiteDomain}
+                </a>
+              </div>
+            )}
+            
+            {foodPlace.description && (  // Changed from Description to description
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {foodPlace.description}
+              </p>
+            )}
+            
+            {foodPlace.cuisine && (  // Changed from Cuisine to cuisine
+              <div className="flex flex-wrap gap-2 mt-4">
+                {foodPlace.cuisine.split(',').map((cuisine: string, index: number) => (
+                  <Badge key={index} variant="secondary" className="bg-gray-100">
+                    {cuisine.trim()}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">

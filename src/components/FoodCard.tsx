@@ -15,52 +15,48 @@ interface FoodCardProps {
     _id?: string;
     name: string;
     address?: string;
-    Phone?: string;
-    WebsiteLink?: string;
-    Description?: string;
-    Image?: string;
-    Cuisine?: string;
-    Rating?: string;
-    Hours?: string;
+    phone?: string;
+    websiteLink?: string;
+    description?: string;
+    image?: string;
+    cuisine?: string;
+    rating?: string;
+    hours?: string;
     createdBy?: string;
+    city?: string;
   };
 }
 
 export default function FoodCard({ foodPlace }: FoodCardProps) {
-  // Add a safety check at the beginning
   if (!foodPlace) {
-    return null; // Don't render anything if foodPlace is undefined
+    return null;
   }
 
-  const [imageError, setImageError] = useState(false)
-  
-  // Extract domain name from website link for display - with null check
-  const websiteDomain = foodPlace.WebsiteLink 
-    ? foodPlace.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
-    : "";
+  const [imageError, setImageError] = useState(false);
 
-  // Get initials for avatar fallback - with null check
+  // Add getInitials function
   const getInitials = (name: string = "") => {
     if (!name) return "";
     return name
       .split(" ")
       .map((part) => part[0])
       .join("")
-      .toUpperCase()
-  }
+      .toUpperCase();
+  };
 
-  // Check if the image URL is a Google search URL - with null check
-  const isGoogleSearchUrl = foodPlace.Image?.includes("google.com/url");
+  const websiteDomain = foodPlace.websiteLink 
+    ? foodPlace.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
+    : "";
 
-  // Determine if we should show the fallback
-  const showFallback = !foodPlace.Image || imageError || isGoogleSearchUrl;
+  const isGoogleSearchUrl = foodPlace.image?.includes("google.com/url");
+  const showFallback = !foodPlace.image || imageError || isGoogleSearchUrl;
 
-  // Handle external website click
+  // Add handleWebsiteClick function
   const handleWebsiteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (foodPlace.WebsiteLink) {
-      window.open(foodPlace.WebsiteLink, '_blank', 'noopener,noreferrer');
+    if (foodPlace.websiteLink) {
+      window.open(foodPlace.websiteLink, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -68,13 +64,14 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
     <Link href={`/food/${foodPlace._id || ""}`} className="block">
       <Card className="overflow-hidden max-w-md w-full transition-all duration-200 hover:shadow-lg">
         <div className="relative h-48 w-full bg-gray-100">
-          {!showFallback ? (
+          {!showFallback && foodPlace.image ? (
             <Image
-              src={foodPlace.Image || ""}
+              src={foodPlace.image}
               alt={foodPlace.name || "Food place"}
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               onError={() => setImageError(true)}
             />
           ) : (

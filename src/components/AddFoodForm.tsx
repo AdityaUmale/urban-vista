@@ -8,76 +8,51 @@ interface AddFoodFormProps {
 interface FormData {
   name: string;
   address: string;
-  Phone: string;
-  WebsiteLink: string;
-  Description: string;
-  Image: string;
+  phone: string;         // Changed from Phone
+  websiteLink: string;   // Changed from WebsiteLink
+  description: string;   // Changed from Description
+  image: string;         // Changed from Image
+  cuisine?: string;
+  rating?: string;
+  hours?: string;
   city: string;
 }
 
 export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Update initial state with consistent field names
   const [formData, setFormData] = useState<FormData>({
     name: '',
     address: '',
-    Phone: '',
-    WebsiteLink: '',
-    Description: '',
-    Image: '',
-    city: '',
+    phone: '',
+    websiteLink: '',
+    description: '',
+    image: '',
+    cuisine: '',
+    rating: '',
+    hours: '',
+    city: ''
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  // Update form reset with matching field names
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      address: '',
+      phone: '',
+      websiteLink: '',
+      description: '',
+      image: '',
+      cuisine: '',
+      rating: '',
+      hours: '',
+      city: ''
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('/api/food', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add food place');
-      }
-
-      // Reset form and close modal
-      setFormData({
-        name: '',
-        address: '',
-        Phone: '',
-        WebsiteLink: '',
-        Description: '',
-        Image: '',
-        city: '',
-      });
-      setIsOpen(false);
-      
-      // Show success message
-      toast.success('Food place added successfully!');
-      
-      // Refresh the list
-      onSuccess();
-    } catch (error) {
-      console.error('Error adding food place:', error);
-      toast.error('Failed to add food place. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+  // Update form fields to match state properties
   return (
     <div>
       <button
@@ -124,31 +99,31 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="Phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
                   Phone
                 </label>
                 <input
                   type="text"
-                  id="Phone"
-                  name="Phone"
-                  value={formData.Phone}
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   required
                 />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="WebsiteLink" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="websiteLink" className="block text-sm font-medium text-gray-700 mb-1">
                   Website Link
                 </label>
                 <input
                   type="url"
-                  id="WebsiteLink"
-                  name="WebsiteLink"
-                  value={formData.WebsiteLink}
+                  id="websiteLink"
+                  name="websiteLink"
+                  value={formData.websiteLink}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   required
                 />
               </div>

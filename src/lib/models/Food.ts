@@ -1,14 +1,17 @@
 import mongoose from 'mongoose';
 
 const FoodSchema = new mongoose.Schema({
-    name: String,
-    address: String,
-    Phone: String,
-    WebsiteLink: String,
-    Description: String,
-    Image: String,
-    createdBy: String,
-    city: String, // Added city field
+    name: { type: String, required: true },
+    address: { type: String, required: true },
+    phone: { type: String, required: true },
+    websiteLink: { type: String, required: true },
+    description: { type: String, required: true },
+    image: { type: String, required: true },
+    cuisine: { type: String },
+    rating: { type: String },
+    hours: { type: String },
+    createdBy: { type: String },
+    city: { type: String, required: true }
 });
 
 const Food = mongoose.models.Food || mongoose.model('Food', FoodSchema);
