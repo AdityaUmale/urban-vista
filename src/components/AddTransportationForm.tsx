@@ -124,6 +124,12 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
             <Input id="address" name="address" />
           </div>
           
+          {/* Add city field */}
+          <div className="space-y-2">
+            <Label htmlFor="city">City</Label>
+            <Input id="city" name="city" placeholder="Enter city name" />
+          </div>
+          
           <div className="space-y-2">
             <Label htmlFor="type">Type</Label>
             <Input id="type" name="type" placeholder="e.g., Bus, Train, Metro" />
@@ -178,4 +184,4 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
       </DialogContent>
     </Dialog>
   )
-} 
+}

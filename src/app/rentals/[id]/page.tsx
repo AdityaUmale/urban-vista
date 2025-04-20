@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Home, Mail, MapPin, ArrowLeft, DollarSign } from "lucide-react";
+import { Home, Mail, MapPin, ArrowLeft, IndianRupee } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -106,7 +106,7 @@ export default async function RentalDetailPage({
               {rental.price && (
                 <div className="flex items-center group">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
-                    <DollarSign className="h-5 w-5 text-primary" />
+                    <IndianRupee className="h-5 w-5 text-primary" />
                   </div>
                   <span className="text-gray-700 group-hover:text-gray-900 transition-colors font-semibold">
                     {rental.price}

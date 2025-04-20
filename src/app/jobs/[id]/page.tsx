@@ -139,9 +139,6 @@ export default async function JobDetailPage({
                 </div>
               </div>
               
-              <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
-                Apply for this position
-              </Button>
             </div>
           </div>
         </div>
@@ -189,7 +186,6 @@ export default async function JobDetailPage({
             <p className="text-gray-700 mb-6">
               Interested in this position? Submit your application by clicking the apply button and following the instructions.
             </p>
-            <Button size="lg" className="w-full md:w-auto">Apply Now</Button>
           </div>
         </div>
       </div>
