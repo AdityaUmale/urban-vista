@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
 
 interface AddHospitalFormProps {
   onSuccess: () => void;
@@ -8,10 +10,10 @@ interface AddHospitalFormProps {
 interface FormData {
   name: string;
   address: string;
-  Phone: string;
-  WebsiteLink: string;
-  Description: string;
-  Image: string;
+  phone: string;       // Changed from Phone
+  websiteLink: string; // Changed from WebsiteLink
+  description: string; // Changed from Description
+  image: string;       // Changed from Image
   city: string;
 }
 
@@ -21,10 +23,10 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     address: '',
-    Phone: '',
-    WebsiteLink: '',
-    Description: '',
-    Image: '',
+    phone: '',       // Changed from Phone
+    websiteLink: '', // Changed from WebsiteLink
+    description: '', // Changed from Description
+    image: '',       // Changed from Image
     city: '',
   });
 
@@ -127,11 +129,12 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                 <label htmlFor="Phone" className="block text-sm font-medium text-gray-700 mb-1">
                   Phone
                 </label>
-                <input
+                
+                <Input
                   type="text"
-                  id="Phone"
-                  name="Phone"
-                  value={formData.Phone}
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
@@ -144,9 +147,9 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                 </label>
                 <input
                   type="url"
-                  id="WebsiteLink"
-                  name="WebsiteLink"
-                  value={formData.WebsiteLink}
+                  id="websiteLink"
+                  name="websiteLink"
+                  value={formData.websiteLink}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
@@ -157,10 +160,10 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                 <label htmlFor="Description" className="block text-sm font-medium text-gray-700 mb-1">
                   Description
                 </label>
-                <textarea
-                  id="Description"
-                  name="Description"
-                  value={formData.Description}
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -174,9 +177,9 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                 </label>
                 <input
                   type="url"
-                  id="Image"
-                  name="Image"
-                  value={formData.Image}
+                  id="image"
+                  name="image"
+                  value={formData.image}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required

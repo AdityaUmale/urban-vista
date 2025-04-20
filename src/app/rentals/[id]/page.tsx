@@ -67,9 +67,16 @@ export default async function RentalDetailPage({
       .toUpperCase();
   };
   
-  // Check if the image URL is a Google search URL
+  // Update the image fallback check
   const isGoogleSearchUrl = rental.image?.includes("google.com/url");
-  const showFallback = !rental.image || isGoogleSearchUrl;
+  const showFallback = !rental.image || isGoogleSearchUrl || rental.image === "";
+
+  // Update image validation
+  const isValidImage = rental.image && 
+    typeof rental.image === 'string' && 
+    rental.image.startsWith('http');
+  
+  const showFallback = !isValidImage || isGoogleSearchUrl;
 
   return (
     <div className="container py-12 max-w-6xl mx-auto">
@@ -90,6 +97,7 @@ export default async function RentalDetailPage({
                   fill
                   className="object-cover"
                   priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               ) : (
                 <div className="h-full w-full flex flex-col items-center justify-center bg-gray-50">

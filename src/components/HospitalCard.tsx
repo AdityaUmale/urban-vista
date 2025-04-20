@@ -15,29 +15,27 @@ interface HospitalCardProps {
     _id?: string;
     name: string;
     address?: string;
-    Phone?: string;
-    WebsiteLink?: string;
-    Description?: string;
-    Image?: string;
+    phone?: string;         // Changed from Phone
+    websiteLink?: string;   // Changed from WebsiteLink
+    description?: string;   // Changed from Description
+    image?: string;         // Changed from Image
     city?: string;
     createdBy?: string;
   };
 }
 
 export default function HospitalCard({ hospital }: HospitalCardProps) {
-  // Add a safety check at the beginning
   if (!hospital) {
-    return null; // Don't render anything if hospital is undefined
+    return null;
   }
 
   const [imageError, setImageError] = useState(false)
   
-  // Extract domain name from website link for display - with null check
-  const websiteDomain = hospital.WebsiteLink 
-    ? hospital.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
+  const websiteDomain = hospital.websiteLink 
+    ? hospital.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
     : "";
 
-  // Get initials for avatar fallback - with null check
+  // Get initials for avatar fallback
   const getInitials = (name: string = "") => {
     if (!name) return "";
     return name
@@ -47,18 +45,17 @@ export default function HospitalCard({ hospital }: HospitalCardProps) {
       .toUpperCase()
   }
 
-  // Check if the image URL is a Google search URL - with null check
-  const isGoogleSearchUrl = hospital.Image?.includes("google.com/url");
-
-  // Determine if we should show the fallback
-  const showFallback = !hospital.Image || imageError || isGoogleSearchUrl;
+  const isGoogleSearchUrl = hospital.image?.includes("google.com/url");
+  
+  // Define showFallback before using it
+  const showFallback = !hospital.image || imageError || isGoogleSearchUrl;
 
   // Handle external website click
   const handleWebsiteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (hospital.WebsiteLink) {
-      window.open(hospital.WebsiteLink, '_blank', 'noopener,noreferrer');
+    if (hospital.websiteLink) {
+      window.open(hospital.websiteLink, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -68,12 +65,12 @@ export default function HospitalCard({ hospital }: HospitalCardProps) {
         <div className="relative h-48 w-full bg-gray-100">
           {!showFallback ? (
             <Image
-              src={hospital.Image || ""}
+              src={hospital.image || ""}
               alt={hospital.name || "Hospital"}
               fill
               className="object-cover"
               priority
-              onError={() => setImageError(true)}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">
@@ -106,18 +103,18 @@ export default function HospitalCard({ hospital }: HospitalCardProps) {
 
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {hospital.Description || 'No description available'}
+            {hospital.description || 'No description available'}  {/* Changed from Description */}
           </p>
 
           <div className="space-y-2">
-            {hospital.Phone && (
+            {hospital.phone && (  /* Changed from Phone */
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                <span className="text-sm">{hospital.Phone}</span>
+                <span className="text-sm">{hospital.phone}</span>  {/* Changed from Phone */}
               </div>
             )}
 
-            {hospital.WebsiteLink && (
+            {hospital.websiteLink && (  /* Changed from WebsiteLink */
               <div className="flex items-center">
                 <ExternalLink className="h-4 w-4 mr-2 text-muted-foreground" />
                 <button

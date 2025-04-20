@@ -39,12 +39,7 @@ async function getHospitalById(id: string) {
   }
 }
 
-export default async function HospitalDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
-  // Fix for the params warning - use Promise.resolve to ensure params is awaited
+export default async function HospitalDetailPage({ params }: { params: { id: string } }) {
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;
   
@@ -57,14 +52,10 @@ export default async function HospitalDetailPage({
   if (!hospital) {
     notFound();
   }
-  
-  // Extract domain name from website link for display
-  const websiteDomain = hospital.WebsiteLink 
-    ? hospital.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
-    : "";
-  
-  // Get initials for avatar fallback
-  const getInitials = (name: string) => {
+
+  // Define getInitials function
+  const getInitials = (name: string = "") => {
+    if (!name) return "";
     return name
       .split(" ")
       .map((part) => part[0])
@@ -72,9 +63,17 @@ export default async function HospitalDetailPage({
       .toUpperCase();
   };
   
-  // Check if the image URL is a Google search URL
-  const isGoogleSearchUrl = hospital.Image?.includes("google.com/url");
-  const showFallback = !hospital.Image || isGoogleSearchUrl;
+  // Extract domain name from website link for display
+  // Move all variable declarations before return
+  const websiteDomain = hospital.websiteLink 
+    ? hospital.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
+    : "";
+
+  const isValidImage = hospital.image && 
+    typeof hospital.image === 'string' && 
+    (hospital.image.startsWith('http://') || hospital.image.startsWith('https://'));
+  const isGoogleSearchUrl = hospital.image?.includes("google.com/url");
+  const showFallback = !isValidImage || isGoogleSearchUrl;
 
   return (
     <div className="container py-12 max-w-6xl mx-auto">
@@ -84,17 +83,17 @@ export default async function HospitalDetailPage({
       </Link>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left column - Image and basic info */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8 border border-gray-100">
             <div className="relative aspect-square w-full bg-gray-50">
               {!showFallback ? (
                 <Image
-                  src={hospital.Image}
+                  src={hospital.image}
                   alt={hospital.name}
                   fill
                   className="object-cover"
                   priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               ) : (
                 <div className="h-full w-full flex flex-col items-center justify-center bg-gray-50">
