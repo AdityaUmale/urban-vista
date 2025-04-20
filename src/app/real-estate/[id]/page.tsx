@@ -18,19 +18,30 @@ async function getPropertyById(id: string) {
     });
     
     if (!response.ok) {
+      console.error("API response not OK:", response.status);
       return null;
     }
     
-    // The API returns an array directly
-    const properties = await response.json();
+    // Handle different response formats
+    const data = await response.json();
     
-    if (!properties || !Array.isArray(properties)) {
-      console.error("API response is not in expected format:", properties);
+    // Determine the structure of the response
+    let properties;
+    if (Array.isArray(data)) {
+      // Direct array response
+      properties = data;
+    } else if (data.properties && Array.isArray(data.properties)) {
+      // Object with properties array property
+      properties = data.properties;
+    } else {
+      console.error("API response is not in expected format:", data);
       return null;
     }
     
     // Find the specific property by ID
-    return properties.find((property: any) => property._id === id) || null;
+    const property = properties.find((prop: any) => prop._id === id);
+    console.log("Found property:", property);
+    return property || null;
   } catch (error) {
     console.error("Error fetching property:", error);
     return null;

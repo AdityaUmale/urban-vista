@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import AddRealEstateForm from "@/components/AddRealEstateForm"
-import { toast } from "sonner"
+import RealEstateCard from "@/components/RealEstateCard"
+import { toast, Toaster } from "sonner"
 
 interface RealEstate {
   _id: string;
@@ -49,13 +50,6 @@ export default function RealEstatePage() {
     property.address.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price)
-  }
-
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Real Estate Properties</h1>
@@ -90,33 +84,11 @@ export default function RealEstatePage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRealEstate.map((property) => (
-            <Card key={property._id} className="overflow-hidden">
-              <div className="relative h-48 w-full bg-gray-100">
-                {property.image ? (
-                  <img
-                    src={property.image}
-                    alt={property.name}
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                    <span className="text-gray-400">No image available</span>
-                  </div>
-                )}
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{property.name}</h3>
-                <p className="text-lg font-bold text-primary mb-2">
-                  {formatPrice(property.price)}
-                </p>
-                <p className="text-sm text-muted-foreground mb-2">{property.type}</p>
-                <p className="text-sm mb-2">{property.address}</p>
-                <p className="text-sm text-muted-foreground">{property.description}</p>
-              </CardContent>
-            </Card>
+            <RealEstateCard key={property._id} property={property} />
           ))}
         </div>
       )}
+      <Toaster />
     </div>
   )
-} 
+}
