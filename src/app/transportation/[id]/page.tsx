@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Bus, MapPin, ArrowLeft, Clock, Info, Building } from "lucide-react";
+import { Bus, MapPin, ArrowLeft, Clock} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -30,7 +30,7 @@ async function getTransportationById(id: string) {
     }
     
     // Find the specific transportation service by ID
-    return transportationServices.find((service: any) => service._id === id) || null;
+    return transportationServices.find((service: { _id: string }) => service._id === id) || null;
   } catch (error) {
     console.error("Error fetching transportation service:", error);
     return null;

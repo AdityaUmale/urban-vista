@@ -31,7 +31,7 @@ async function getInstituteById(id: string) {
     }
     
     // Find the specific institute by ID
-    return institutes.find((inst: any) => inst._id === id) || null;
+    return institutes.find((inst: { _id: string }) => inst._id === id) || null;
   } catch (error) {
     console.error("Error fetching institute:", error);
     return null;

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Briefcase, MapPin, ArrowLeft, DollarSign, Building, Clock, CalendarDays } from "lucide-react";
+import { MapPin, ArrowLeft, DollarSign, Building, CalendarDays } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -29,7 +29,7 @@ async function getJobById(id: string) {
     }
     
     // Find the specific job by ID
-    return jobs.find((job: any) => job._id === id) || null;
+    return jobs.find((job: { _id: string }) => job._id === id) || null;
   } catch (error) {
     console.error("Error fetching job:", error);
     return null;

@@ -60,7 +60,7 @@ export default function JobCard({ job }: JobCardProps) {
         <div className="relative h-48 w-full bg-gray-100">
           {!showFallback ? (
             <Image
-              src={job.image}
+              src={job.image || ''}
               alt={job.company}
               fill
               className="object-cover"

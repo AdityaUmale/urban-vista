@@ -33,7 +33,7 @@ async function getFoodPlaceById(id: string) {
     }
     
     // Find the specific food place by ID
-    return foodPlaces.find((place: any) => place._id === id) || null;
+    return foodPlaces.find((place: { _id: string }) => place._id === id) || null;
   } catch (error) {
     console.error("Error fetching food place:", error);
     return null;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react"
-import { Building2, MapPin, DollarSign, Home } from "lucide-react"
+import { Building2, MapPin, DollarSign} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 

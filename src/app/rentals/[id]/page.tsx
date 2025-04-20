@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Home, ExternalLink, Mail, MapPin, Phone, ArrowLeft, DollarSign } from "lucide-react";
+import { Home, Mail, MapPin, ArrowLeft, DollarSign } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, ExternalLink, Mail, MapPin, Phone, ArrowLeft, Clock } from "lucide-react";
+import { Building2, ExternalLink, Mail, MapPin, Phone, ArrowLeft} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -32,7 +32,7 @@ async function getHospitalById(id: string) {
     }
     
     // Find the specific hospital by ID
-    return hospitals.find((hospital: any) => hospital._id === id) || null;
+    return hospitals.find((hospital: { _id: string }) => hospital._id === id) || null;
   } catch (error) {
     console.error("Error fetching hospital:", error);
     return null;

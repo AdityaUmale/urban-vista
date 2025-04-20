@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, MapPin, ArrowLeft, DollarSign, Home, Bed, Bath, Ruler } from "lucide-react";
+import { Building2, MapPin, ArrowLeft, DollarSign, Home } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
