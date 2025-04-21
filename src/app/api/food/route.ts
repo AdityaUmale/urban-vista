@@ -25,33 +25,30 @@ export async function GET() {
 // POST route to create a new food place
 export async function POST(request: Request) {
   try {
-    // Connect to database
     await connectDB();
     
-    // Get request body
-    const { name, address, cuisine, timings, description, image, city, createdBy } = await request.json();
+    const body = await request.json();
     
-    // Validate input
-    if (!name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
-    }
+    // Make sure field names match the schema
+    const foodData = {
+      name: body.name,
+      address: body.address,
+      phone: body.phone,         // Ensure this matches the form field
+      websiteLink: body.websiteLink, // Ensure this matches the form field
+      description: body.description,
+      image: body.image,
+      cuisine: body.cuisine,
+      rating: body.rating,
+      hours: body.hours,
+      city: body.city,
+      createdBy: 'Anonymous User' // Add default user if not provided
+    };
     
-    // Create new food place
-    const newFood = await Food.create({
-      name,
-      address,
-      cuisine,
-      timings,
-      description,
-      image,
-      city,
-      createdBy,
-    });
+    // Log the data being sent to MongoDB for debugging
+    console.log('Creating food place with data:', foodData);
     
-    // Return success response
+    const newFood = await Food.create(foodData);
+    
     return NextResponse.json({ food: newFood }, { status: 201 });
   } catch (error) {
     console.error('Error creating food place:', error);

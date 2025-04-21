@@ -54,7 +54,11 @@ export default async function FoodDetailPage({ params }: { params: { id: string 
     notFound();
   }
 
-  // Add getInitials function
+  // Add websiteDomain calculation
+  const websiteDomain = foodPlace.websiteLink 
+    ? foodPlace.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
+    : "";
+
   const getInitials = (name: string = "") => {
     if (!name) return "";
     return name

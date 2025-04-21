@@ -173,7 +173,7 @@ export default async function HospitalDetailPage({ params }: { params: { id: str
             <div className="border-t border-gray-100 pt-8">
               <h2 className="text-xl font-semibold mb-5 text-gray-800">About</h2>
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {hospital.Description || 'No description available'}
+                {hospital.description || 'No description available'}
               </p>
             </div>
           </div>

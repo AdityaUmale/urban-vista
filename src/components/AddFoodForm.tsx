@@ -8,10 +8,10 @@ interface AddFoodFormProps {
 interface FormData {
   name: string;
   address: string;
-  phone: string;         // Changed from Phone
-  websiteLink: string;   // Changed from WebsiteLink
-  description: string;   // Changed from Description
-  image: string;         // Changed from Image
+  phone: string;         // Remove optional
+  websiteLink: string;   // Remove optional
+  description: string;   
+  image: string;         
   cuisine?: string;
   rating?: string;
   hours?: string;
@@ -21,8 +21,6 @@ interface FormData {
 export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Update initial state with consistent field names
   const [formData, setFormData] = useState<FormData>({
     name: '',
     address: '',
@@ -36,23 +34,63 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
     city: ''
   });
 
-  // Update form reset with matching field names
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      address: '',
-      phone: '',
-      websiteLink: '',
-      description: '',
-      image: '',
-      cuisine: '',
-      rating: '',
-      hours: '',
-      city: ''
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  // Update form fields to match state properties
+  // Add handleSubmit function
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Add validation check
+    if (!formData.phone || !formData.websiteLink) {
+      toast.error('Phone and Website Link are required fields');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/food', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add food place');
+      }
+
+      setFormData({
+        name: '',
+        address: '',
+        phone: '',
+        websiteLink: '',
+        description: '',
+        image: '',
+        cuisine: '',
+        rating: '',
+        hours: '',
+        city: ''
+      });
+      setIsOpen(false);
+      
+      toast.success('Food place added successfully!');
+      onSuccess();
+    } catch (error) {
+      console.error('Error adding food place:', error);
+      toast.error('Failed to add food place. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div>
       <button
@@ -129,13 +167,13 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="Description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                   Description
                 </label>
                 <textarea
-                  id="Description"
-                  name="Description"
-                  value={formData.Description}
+                  id="description"
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -144,14 +182,14 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="Image" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
                   Image URL
                 </label>
                 <input
                   type="url"
-                  id="Image"
-                  name="Image"
-                  value={formData.Image}
+                  id="image"
+                  name="image"
+                  value={formData.image}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
