@@ -106,12 +106,12 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
 
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {foodPlace.Description || 'No description available'}
+            {foodPlace.description || 'No description available'}  {/* Changed from Description to description */}
           </p>
 
-          {foodPlace.Cuisine && (
+          {foodPlace.cuisine && (  /* Changed from Cuisine to cuisine */
             <div className="flex flex-wrap gap-1">
-              {foodPlace.Cuisine.split(',').map((cuisine, index) => (
+              {foodPlace.cuisine.split(',').map((cuisine, index) => (
                 <Badge key={index} variant="secondary" className="text-xs">
                   {cuisine.trim()}
                 </Badge>
@@ -120,14 +120,14 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
           )}
 
           <div className="space-y-2">
-            {foodPlace.Phone && (
+            {foodPlace.phone && (  /* Changed from Phone to phone */
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                <span className="text-sm">{foodPlace.Phone}</span>
+                <span className="text-sm">{foodPlace.phone}</span>
               </div>
             )}
 
-            {foodPlace.WebsiteLink && (
+            {foodPlace.websiteLink && (  /* Changed from WebsiteLink to websiteLink */
               <div className="flex items-center">
                 <ExternalLink className="h-4 w-4 mr-2 text-muted-foreground" />
                 <button

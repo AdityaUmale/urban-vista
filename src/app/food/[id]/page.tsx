@@ -230,7 +230,7 @@ export default async function FoodDetailPage({ params }: { params: { id: string 
             <div className="border-t border-gray-100 pt-8">
               <h2 className="text-xl font-semibold mb-5 text-gray-800">About</h2>
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {foodPlace.Description || 'No description available'}
+                {foodPlace.description || 'No description available'}  {/* Changed from Description to description */}
               </p>
             </div>
           </div>

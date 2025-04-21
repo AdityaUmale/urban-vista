@@ -67,17 +67,13 @@ export default async function RentalDetailPage({
       .toUpperCase();
   };
   
-  // Update the image fallback check
+  // Combine all image validation logic into a single section
   const isGoogleSearchUrl = rental.image?.includes("google.com/url");
-  const showFallback = !rental.image || isGoogleSearchUrl || rental.image === "";
-
-  // Update image validation
   const isValidImage = rental.image && 
     typeof rental.image === 'string' && 
     rental.image.startsWith('http');
-  
   const showFallback = !isValidImage || isGoogleSearchUrl;
-
+  
   return (
     <div className="container py-12 max-w-6xl mx-auto">
       <Link href="/rentals" className="inline-flex items-center text-primary mb-10 hover:underline font-medium transition-colors">

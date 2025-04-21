@@ -58,7 +58,7 @@ export default function FoodPage() {
       searchQuery === '' || 
       (food.name && food.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (food.address && food.address.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (food.Description && food.Description.toLowerCase().includes(searchQuery.toLowerCase()))
+      (food.description && food.description.toLowerCase().includes(searchQuery.toLowerCase()))  // Changed from Description to description
     );
 
   if (loading) {
