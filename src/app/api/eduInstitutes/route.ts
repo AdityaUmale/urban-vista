@@ -1,17 +1,30 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { writeFile } from 'fs/promises';
+import { join } from 'path';
+import { mkdir } from 'fs/promises';
 import connectDB from '@/lib/db';
 import EduInstitute from '@/lib/models/EduInstitute';
+import { parse } from 'url';
+import { v4 as uuidv4 } from 'uuid';
+
+// Disable body parsing, we'll handle it ourselves
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Helper function to read form data
+async function readFormData(req: NextRequest) {
+  const formData = await req.formData();
+  return formData;
+}
 
 // GET route to fetch all educational institutes
 export async function GET() {
   try {
-    // Connect to database
     await connectDB();
-    
-    // Fetch all educational institutes
     const institutes = await EduInstitute.find({});
-    
-    // Return success response
     return NextResponse.json({ institutes }, { status: 200 });
   } catch (error) {
     console.error('Error fetching educational institutes:', error);
@@ -23,24 +36,53 @@ export async function GET() {
 }
 
 // POST route to create a new educational institute
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    // Connect to database
     await connectDB();
     
-    // Get request body
-    const { name, address, Phone, WebsiteLink, Description, Image, city } = await request.json();
+    // Parse the multipart form data
+    const formData = await readFormData(req);
     
-    // Create new institute
+    // Extract file if it exists
+    const pdfFile = formData.get('pdfFile') as File | null;
+    let pdfUrl = '';
+    let pdfName = '';
+    
+    if (pdfFile) {
+      // Create uploads directory if it doesn't exist
+      const uploadDir = join(process.cwd(), 'public', 'uploads');
+      try {
+        await mkdir(uploadDir, { recursive: true });
+      } catch (err) {
+        console.log('Upload directory already exists or cannot be created');
+      }
+      
+      // Generate unique filename
+      const uniqueId = uuidv4();
+      const fileName = `${uniqueId}-${pdfFile.name}`;
+      const filePath = join(uploadDir, fileName);
+      
+      // Convert file to buffer and save it
+      const fileBuffer = Buffer.from(await pdfFile.arrayBuffer());
+      await writeFile(filePath, fileBuffer);
+      
+      // Set the URL to the saved file
+      pdfUrl = `/uploads/${fileName}`;
+      pdfName = formData.get('pdfName') as string || pdfFile.name;
+    }
+    
+    // Create new institute with all form fields
     const newInstitute = new EduInstitute({
-      name,
-      address,
-      Phone,
-      WebsiteLink,
-      Description,
-      Image,
-      city,
-      createdBy: 'anonymous', // Default value since we don't have user authentication yet
+      name: formData.get('name'),
+      address: formData.get('address'),
+      Phone: formData.get('Phone'),
+      WebsiteLink: formData.get('WebsiteLink'),
+      Description: formData.get('Description'),
+      Image: formData.get('Image'),
+      city: formData.get('city'),
+      pdfUrl: pdfUrl,
+      pdfName: pdfName,
+      createdBy: 'anonymous', // Default value
     });
     
     // Save to database

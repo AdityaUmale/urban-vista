@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ExternalLink, Mail, MapPin, Phone, Building2 } from "lucide-react"
+import { ExternalLink, Mail, MapPin, Phone, Building2, FileDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -17,6 +17,8 @@ interface EduInstituteProps {
     Description: string;
     Image: string;
     createdBy: string;
+    pdfUrl?: string;
+    pdfName?: string;
   };
 }
 
@@ -47,6 +49,15 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
     e.stopPropagation();
     if (institute.WebsiteLink) {
       window.open(institute.WebsiteLink, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  // Handle PDF download
+  const handlePdfDownload = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (institute.pdfUrl) {
+      window.open(institute.pdfUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -107,6 +118,19 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
                 </button>
               </div>
             )}
+            
+            {/* PDF Download Button */}
+            {institute.pdfUrl && (
+              <div className="flex items-center">
+                <FileDown className="h-4 w-4 mr-2 text-muted-foreground" />
+                <button
+                  onClick={handlePdfDownload}
+                  className="text-sm text-primary hover:underline text-left"
+                >
+                  {institute.pdfName || 'Download PDF'}
+                </button>
+              </div>
+            )}
           </div>
         </CardContent>
 
@@ -121,17 +145,29 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
             </div>
           </div>
 
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={(e) => {
-              e.preventDefault();
-              // You can add contact functionality here
-            }}
-          >
-            <Mail className="h-4 w-4 mr-2" />
-            Contact
-          </Button>
+          {/* Show PDF download button if available, otherwise show contact button */}
+          {institute.pdfUrl ? (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handlePdfDownload}
+            >
+              <FileDown className="h-4 w-4 mr-2" />
+              Download
+            </Button>
+          ) : (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                // You can add contact functionality here
+              }}
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Contact
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </Link>

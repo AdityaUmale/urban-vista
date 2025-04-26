@@ -9,6 +9,8 @@ const EduInstituteSchema = new mongoose.Schema({
     Image: String,
     createdBy: String,
     city: String, // Added city field
+    pdfUrl: String, // Added PDF URL field
+    pdfName: String, // Added PDF name field
 });
 
 const EduInstitute = mongoose.models.EduInstitute || mongoose.model('EduInstitute', EduInstituteSchema);

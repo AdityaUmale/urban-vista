@@ -1,226 +1,196 @@
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useState, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Plus, AlertCircle, FileUp } from "lucide-react"
+import { toast } from "sonner"
 
 interface AddEduInstituteFormProps {
   onSuccess: () => void;
 }
 
-interface FormData {
-  name: string;
-  address: string;
-  Phone: string;
-  WebsiteLink: string;
-  Description: string;
-  Image: string;
-  city: string;
-}
-
 export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    address: '',
-    Phone: '',
-    WebsiteLink: '',
-    Description: '',
-    Image: '',
-    city: '',
-  });
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [imageError, setImageError] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      // Check if file is a PDF
+      if (file.type !== 'application/pdf') {
+        toast.error("Please select a PDF file")
+        return
+      }
+      
+      setSelectedFile(file)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setLoading(true)
+    setImageError(false)
+
+    const formData = new FormData(e.currentTarget as HTMLFormElement)
+    
+    // Add the file to formData if it exists
+    if (selectedFile) {
+      formData.append("pdfFile", selectedFile)
+    }
 
     try {
-      const response = await fetch('/api/eduInstitutes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      // Use FormData for multipart/form-data submission
+      const response = await fetch("/api/eduInstitutes", {
+        method: "POST",
+        body: formData, // No need to set Content-Type header, browser will set it with boundary
+      })
+
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error('Failed to add educational institute');
+        throw new Error(data.error || "Failed to create educational institute")
       }
 
-      // Reset form and close modal
-      setFormData({
-        name: '',
-        address: '',
-        Phone: '',
-        WebsiteLink: '',
-        Description: '',
-        Image: '',
-        city: '',
-      });
-      setIsOpen(false);
+      toast.success("Educational institute added successfully")
+      setOpen(false)
+      onSuccess()
       
-      // Show success message
-      toast.success('Educational institute added successfully!');
-      
-      // Refresh the list
-      onSuccess();
+      // Reset file selection
+      setSelectedFile(null)
     } catch (error) {
-      console.error('Error adding educational institute:', error);
-      toast.error('Failed to add educational institute. Please try again.');
+      console.error("Error creating educational institute:", error)
+      toast.error(error instanceof Error ? error.message : "Failed to create educational institute")
     } finally {
-      setIsSubmitting(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-      >
-        Add Institute
-      </button>
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">Add Educational Institute</h2>
-            
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="Phone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone
-                </label>
-                <input
-                  type="text"
-                  id="Phone"
-                  name="Phone"
-                  value={formData.Phone}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="WebsiteLink" className="block text-sm font-medium text-gray-700 mb-1">
-                  Website Link
-                </label>
-                <input
-                  type="url"
-                  id="WebsiteLink"
-                  name="WebsiteLink"
-                  value={formData.WebsiteLink}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="Description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  id="Description"
-                  name="Description"
-                  value={formData.Description}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="Image" className="block text-sm font-medium text-gray-700 mb-1">
-                  Image URL
-                </label>
-                <input
-                  type="url"
-                  id="Image"
-                  name="Image"
-                  value={formData.Image}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                  City
-                </label>
-                <select
-                  id="city"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                >
-                  <option value="">Select a city</option>
-                  <option value="Mumbai">Mumbai</option>
-                  <option value="Pune">Pune</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Adding...' : 'Add Institute'}
-                </button>
-              </div>
-            </form>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="mb-6">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Educational Institute
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add Educational Institute</DialogTitle>
+          <DialogDescription>
+            Fill in the details of the educational institute. Click save when you&apos;re done.
+          </DialogDescription>
+        </DialogHeader>
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
+          <div className="space-y-2">
+            <Label htmlFor="name">Name *</Label>
+            <Input id="name" name="name" required />
           </div>
-        </div>
-      )}
-    </div>
-  );
+          
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Input id="address" name="address" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="city">City</Label>
+            <Input id="city" name="city" placeholder="Enter city name" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="Phone">Phone</Label>
+            <Input id="Phone" name="Phone" placeholder="e.g., +1 (123) 456-7890" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="WebsiteLink">Website</Label>
+            <Input id="WebsiteLink" name="WebsiteLink" type="url" placeholder="e.g., https://example.com" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="Description">Description</Label>
+            <Textarea id="Description" name="Description" />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="Image">Image URL</Label>
+            <Input 
+              id="Image" 
+              name="Image" 
+              type="url" 
+              onChange={() => setImageError(false)}
+            />
+            {imageError && (
+              <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                <AlertCircle className="h-4 w-4" />
+                <span>Please enter a valid image URL</span>
+              </div>
+            )}
+            <p className="text-sm text-muted-foreground mt-1">
+              Enter a valid image URL starting with http:// or https://
+            </p>
+          </div>
+          
+          {/* Add PDF file upload field */}
+          <div className="space-y-2">
+            <Label htmlFor="pdfFile">PDF Document (Brochure, Syllabus, etc.)</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="pdfFile"
+                name="pdfFile"
+                type="file"
+                accept="application/pdf"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full flex items-center justify-center"
+              >
+                <FileUp className="h-4 w-4 mr-2" />
+                {selectedFile ? "Change PDF" : "Upload PDF"}
+              </Button>
+            </div>
+            {selectedFile && (
+              <div className="flex items-center gap-2 text-sm text-green-600 mt-1">
+                <span>Selected: {selectedFile.name}</span>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              Upload a PDF document (max 5MB)
+            </p>
+          </div>
+          
+          <div className="flex justify-end space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={loading}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create Institute"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
 }
