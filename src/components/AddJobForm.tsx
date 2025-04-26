@@ -167,6 +167,20 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
             )}
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="applicationUrl">Application Form URL *</Label>
+            <Input 
+              id="applicationUrl" 
+              name="applicationUrl" 
+              type="url" 
+              placeholder="e.g., https://forms.gle/example"
+              required
+            />
+            <p className="text-sm text-muted-foreground mt-1">
+              Paste your Google Form URL or any application form link here
+            </p>
+          </div>
+          
           <div className="flex justify-end space-x-2">
             <Button
               type="button"
@@ -184,4 +198,4 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
       </DialogContent>
     </Dialog>
   )
-} 
+}

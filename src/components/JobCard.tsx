@@ -20,6 +20,7 @@ interface JobCardProps {
     description: string;
     image?: string;
     createdAt?: string;
+    applicationUrl?: string; // Add this new field
   };
 }
 
@@ -53,6 +54,14 @@ export default function JobCard({ job }: JobCardProps) {
 
   // Determine if we should show the fallback
   const showFallback = !job.image || imageError;
+
+  // Handle application button click
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (job.applicationUrl) {
+      window.open(job.applicationUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   return (
     <Link href={`/jobs/${job._id || ""}`} className="block">
@@ -117,10 +126,8 @@ export default function JobCard({ job }: JobCardProps) {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={(e) => {
-              e.preventDefault();
-              // Apply functionality can be added here
-            }}
+            onClick={handleApplyClick}
+            disabled={!job.applicationUrl}
           >
             <Briefcase className="h-4 w-4 mr-2" />
             Apply

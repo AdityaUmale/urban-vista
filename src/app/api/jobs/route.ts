@@ -27,7 +27,16 @@ export async function POST(request: Request) {
     const data = await request.json()
 
     // Validate required fields
-    const requiredFields = ['title', 'company', 'location', 'type', 'salary', 'description', 'image']
+    const requiredFields = [
+      'title', 
+      'company', 
+      'location', 
+      'type', 
+      'salary', 
+      'description', 
+      'image',
+      'applicationUrl' // Add this new required field
+    ]
     const missingFields = requiredFields.filter(field => !data[field])
     
     if (missingFields.length > 0) {
@@ -64,6 +73,16 @@ export async function POST(request: Request) {
       )
     }
 
+    // Validate application URL
+    try {
+      new URL(data.applicationUrl)
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid application URL format' },
+        { status: 400 }
+      )
+    }
+
     const job = {
       ...data,
       createdAt: new Date(),
@@ -89,4 +108,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-} 
+}
