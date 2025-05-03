@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import TransportationCard from '../../components/TransportationCard';
 import AddTransportationForm from '@/components/AddTransportationForm';
-import { Toaster } from 'sonner';
+
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 
@@ -29,6 +29,7 @@ export default function TransportationPage() {
 
   const fetchTransportations = async () => {
     try {
+      setLoading(true);
       const response = await fetch('/api/transportation');
       
       if (!response.ok) {
@@ -36,7 +37,25 @@ export default function TransportationPage() {
       }
       
       const data = await response.json();
-      setTransportations(data.transportations || []);
+      console.log('Fetched transportation data:', data); // Debug log
+      
+      // Check different possible response formats
+      if (Array.isArray(data)) {
+        // If the response is directly an array
+        setTransportations(data);
+      } else if (data.transportations && Array.isArray(data.transportations)) {
+        // If the response has a transportations property that is an array
+        setTransportations(data.transportations);
+      } else if (data.transportation && Array.isArray(data.transportation)) {
+        // If the response has a transportation property that is an array
+        setTransportations(data.transportation);
+      } else if (data.data && Array.isArray(data.data)) {
+        // If the response has a data property that is an array
+        setTransportations(data.data);
+      } else {
+        console.error('Expected transportations array but got:', data);
+        setTransportations([]);
+      }
     } catch (err) {
       setError('Error loading transportation services. Please try again later.');
       console.error('Error fetching transportations:', err);
@@ -48,6 +67,11 @@ export default function TransportationPage() {
   useEffect(() => {
     fetchTransportations();
   }, []);
+
+  // Debug log for filtered transportations
+  useEffect(() => {
+    console.log('Filtered transportations:', filteredTransportations);
+  }, [transportations, selectedCity, searchQuery]);
 
   // Get unique cities from transportations
   const cities = ['all', ...new Set(transportations.map(transportation => transportation.city || 'Unknown'))];
@@ -124,6 +148,8 @@ export default function TransportationPage() {
         </select>
       </div>
       
+      
+      
       {filteredTransportations.length === 0 ? (
         <p className="text-center">
           {searchQuery 
@@ -137,8 +163,6 @@ export default function TransportationPage() {
           ))}
         </div>
       )}
-      {/* Make sure Toaster is used correctly - it should be just a component, not receiving objects */}
-      <Toaster />
     </div>
   );
 }

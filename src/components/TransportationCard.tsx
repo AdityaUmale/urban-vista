@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react"
-import { Bus, Clock, MapPin } from "lucide-react"
+import { Bus, Clock, MapPin, ExternalLink, Phone } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -12,14 +12,17 @@ import { Badge } from "@/components/ui/badge"
 
 interface TransportationCardProps {
   transportation: {
-    _id?: string;
+    _id: string;
     name: string;
-    address?: string;
+    address: string;
+    Phone: string;
+    WebsiteLink: string;
+    Description: string;
+    Image: string;
+    createdBy: string;
+    city: string;
     type?: string;
     timings?: string;
-    description?: string;
-    image?: string;
-    createdBy?: string;
   };
 }
 
@@ -30,6 +33,9 @@ export default function TransportationCard({ transportation }: TransportationCar
   }
 
   const [imageError, setImageError] = useState(false)
+  
+  // Extract domain name from website link for display
+  const websiteDomain = transportation.WebsiteLink ? transportation.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") : ""
   
   // Get initials for avatar fallback - with null check
   const getInitials = (name: string = "") => {
@@ -42,19 +48,28 @@ export default function TransportationCard({ transportation }: TransportationCar
   }
 
   // Check if the image URL is a Google search URL - with null check
-  const isGoogleSearchUrl = transportation.image?.includes("google.com/url");
+  const isGoogleSearchUrl = transportation.Image?.includes("google.com/url");
 
   // Determine if we should show the fallback
-  const showFallback = !transportation.image || imageError || isGoogleSearchUrl;
+  const showFallback = !transportation.Image || imageError || isGoogleSearchUrl;
+
+  // Handle external website click
+  const handleWebsiteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (transportation.WebsiteLink) {
+      window.open(transportation.WebsiteLink, '_blank', 'noopener,noreferrer');
+    }
+  };
 
   return (
-    <Link href={`/transportation/${transportation._id || ""}`} className="block">
+    <Link href={`/transportation/${transportation._id}`} className="block">
       <Card className="overflow-hidden max-w-md w-full transition-all duration-200 hover:shadow-lg">
         <div className="relative h-48 w-full bg-gray-100">
           {!showFallback ? (
             <Image
-              src={transportation.image || ""}
-              alt={transportation.name || "Transportation service"}
+              src={transportation.Image}
+              alt={transportation.name}
               fill
               className="object-cover"
               priority
@@ -78,28 +93,47 @@ export default function TransportationCard({ transportation }: TransportationCar
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-2xl font-bold">{transportation.name || "Unnamed Service"}</h2>
-              {transportation.address && (
-                <div className="flex items-center text-muted-foreground mt-1">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span className="text-sm">{transportation.address}</span>
-                </div>
-              )}
+              <h2 className="text-2xl font-bold">{transportation.name}</h2>
+              <div className="flex items-center text-muted-foreground mt-1">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span className="text-sm">{transportation.address}</span>
+              </div>
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {transportation.description || 'No description available'}
+            {transportation.Description || 'No description available'}
           </p>
 
-          {transportation.timings && (
-            <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span className="text-sm">{transportation.timings}</span>
-            </div>
-          )}
+          <div className="space-y-2">
+            {transportation.Phone && (
+              <div className="flex items-center">
+                <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span className="text-sm">{transportation.Phone}</span>
+              </div>
+            )}
+
+            {transportation.WebsiteLink && (
+              <div className="flex items-center">
+                <ExternalLink className="h-4 w-4 mr-2 text-muted-foreground" />
+                <button
+                  onClick={handleWebsiteClick}
+                  className="text-sm text-primary hover:underline text-left"
+                >
+                  {websiteDomain}
+                </button>
+              </div>
+            )}
+            
+            {transportation.timings && (
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                <span className="text-sm">{transportation.timings}</span>
+              </div>
+            )}
+          </div>
         </CardContent>
 
         <CardFooter className="border-t pt-4 flex justify-between items-center">
@@ -109,7 +143,7 @@ export default function TransportationCard({ transportation }: TransportationCar
             </Avatar>
             <div>
               <p className="text-xs text-muted-foreground">Added by</p>
-              <p className="text-sm font-medium">{transportation.createdBy || "Admin"}</p>
+              <p className="text-sm font-medium">{transportation.createdBy}</p>
             </div>
           </div>
 
@@ -118,7 +152,9 @@ export default function TransportationCard({ transportation }: TransportationCar
             size="sm"
             onClick={(e) => {
               e.preventDefault();
-              // Get directions functionality can be added here
+              // Open Google Maps directions
+              const address = encodeURIComponent(transportation.address);
+              window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank', 'noopener,noreferrer');
             }}
           >
             <MapPin className="h-4 w-4 mr-2" />

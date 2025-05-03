@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ArrowLeft, DollarSign, Building, CalendarDays } from "lucide-react";
+import { MapPin, ArrowLeft, DollarSign, Building, CalendarDays, Briefcase } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -186,6 +186,20 @@ export default async function JobDetailPage({
             <p className="text-gray-700 mb-6">
               Interested in this position? Submit your application by clicking the apply button and following the instructions.
             </p>
+            {/* Add Apply Button */} 
+            {job.applicationUrl ? (
+              <Button asChild className="w-full md:w-auto">
+                <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer">
+                  <Briefcase className="h-4 w-4 mr-2" />
+                  Apply Now
+                </a>
+              </Button>
+            ) : (
+              <Button className="w-full md:w-auto" disabled>
+                <Briefcase className="h-4 w-4 mr-2" />
+                Apply Now (Link not available)
+              </Button>
+            )}
           </div>
         </div>
       </div>

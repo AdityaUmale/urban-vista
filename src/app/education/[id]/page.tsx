@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, ExternalLink, Mail, MapPin, Phone, ArrowLeft } from "lucide-react";
+import { Building2, ExternalLink, Mail, MapPin, Phone, ArrowLeft, FileDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -115,17 +115,35 @@ export default async function InstituteDetailPage({
               )}
               
               {institute.WebsiteLink && (
-                <div className="flex items-center group">
-                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                <div className="flex items-center group overflow-hidden"> {/* Added overflow-hidden here */} 
+                  <div className="bg-primary/10 p-3 rounded-full mr-4 flex-shrink-0"> {/* Added flex-shrink-0 */} 
                     <ExternalLink className="h-5 w-5 text-primary" />
                   </div>
                   <a
                     href={institute.WebsiteLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:text-primary/80 transition-colors"
+                    className="text-primary hover:text-primary/80 transition-colors truncate" /* Added truncate */
+                    title={websiteDomain} /* Added title attribute for full URL on hover */
                   >
                     {websiteDomain}
+                  </a>
+                </div>
+              )}
+
+              {/* Add PDF Download Button */} 
+              {institute.pdfUrl && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <FileDown className="h-5 w-5 text-primary" />
+                  </div>
+                  <a
+                    href={institute.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Download {/* Changed text to always be "Download" */}
                   </a>
                 </div>
               )}
