@@ -73,6 +73,12 @@ export default function CategoriesPage() {
       description: "Find employment opportunities and career services",
       href: "/jobs",
     },
+    {
+      icon: <Briefcase className="h-6 w-6 text-primary" />,
+      title: "Mess",
+      description: "Find employment opportunities and career services",
+      href: "/mess",
+    },
   ]
 
   return (
