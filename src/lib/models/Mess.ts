@@ -4,16 +4,17 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IMess extends Document {
   name: string;
   address: string;
-  phone?: string; // Optional phone number
-  websiteLink?: string; // Optional website link
-  description?: string; // Optional description
-  image?: string; // URL for the mess image
-  vegPrice?: number; // Price for veg tiffin
-  nonVegPrice?: number; // Price for non-veg tiffin
-  timings?: string; // Operating hours or meal timings
-  applicationUrl?: string; // Link to apply or contact
-  city: string; // City where the mess is located
-  createdBy: string; // User who added the mess
+  phone?: string; 
+  websiteLink?: string; 
+  description?: string; 
+  image?: string; 
+  vegPrice?: number; 
+  nonVegPrice?: number; 
+  timings?: string; 
+  applicationUrl?: string; 
+  googleMapsUrl?: string; // Added Google Maps URL field
+  city: string;
+  createdBy: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -60,6 +61,11 @@ const MessSchema: Schema = new Schema(
     applicationUrl: { // Renamed from 'Apply for mess button' to store a URL
       type: String, 
       trim: true 
+    },
+    // Add the missing field definition here:
+    googleMapsUrl: {
+      type: String,
+      trim: true
     },
     city: { 
       type: String, 

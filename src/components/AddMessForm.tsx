@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, AlertCircle, Utensils } from "lucide-react"; // Changed icon
 import { toast } from "sonner";
+import { MapPin as MapPinIcon } from "lucide-react"; // Import MapPin icon
 
 interface AddMessFormProps {
   onSuccess: () => void;
@@ -53,6 +54,7 @@ export default function AddMessForm({ onSuccess }: AddMessFormProps) {
       vegPrice: data.vegPrice ? Number(data.vegPrice) : undefined,
       nonVegPrice: data.nonVegPrice ? Number(data.nonVegPrice) : undefined,
       createdBy: "Admin User" // Replace with actual user logic later
+      // googleMapsUrl will be included from data if present
     };
 
     try {
@@ -136,6 +138,24 @@ export default function AddMessForm({ onSuccess }: AddMessFormProps) {
           <div className="space-y-2">
             <Label htmlFor="websiteLink">Website</Label>
             <Input id="websiteLink" name="websiteLink" type="url" placeholder="e.g., https://example.com" />
+          </div>
+
+          {/* Added Google Maps URL Input */}
+          <div className="space-y-2">
+            <Label htmlFor="googleMapsUrl">Google Maps Link</Label>
+            <div className="relative">
+              <MapPinIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input 
+                id="googleMapsUrl" 
+                name="googleMapsUrl" 
+                type="url" 
+                placeholder="e.g., https://maps.app.goo.gl/xyz..." 
+                className="pl-10"
+              />
+            </div>
+             <p className="text-sm text-muted-foreground mt-1">
+              Paste the share link from Google Maps.
+            </p>
           </div>
 
           <div className="space-y-2">

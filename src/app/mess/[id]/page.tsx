@@ -2,12 +2,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin,
+  MapPin, // Keep this for the new link
   ArrowLeft,
   DollarSign,
-  Utensils, // Changed icon
+  Utensils, 
   CalendarDays,
-  Info, // Changed icon
+  Info, 
   Phone,
   Clock,
   ExternalLink
@@ -30,6 +30,7 @@ interface IMess {
   nonVegPrice?: number;
   timings?: string;
   applicationUrl?: string;
+  googleMapsUrl?: string; // Added Google Maps URL field
   city: string;
   createdBy: string;
   createdAt: string; // Assuming string from API
@@ -189,6 +190,27 @@ export default async function MessDetailPage({
                       title={mess.websiteLink} /* Added title */
                     >
                       {websiteDomain}
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* Added Google Maps Link Section - This part looks correct */}
+              {mess.googleMapsUrl && (
+                 <div className="flex items-start">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4 flex-shrink-0">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-sm text-gray-500">Location</p>
+                    <a 
+                      href={mess.googleMapsUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="font-medium text-primary hover:underline truncate block"
+                      title={mess.googleMapsUrl} 
+                    >
+                      View on Google Maps
                     </a>
                   </div>
                 </div>

@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
 
-    // Basic validation (you might want more robust validation)
+    // Destructure all fields including the new one
     const { 
       name, 
       address, 
@@ -21,7 +21,8 @@ export async function POST(request: Request) {
       vegPrice, 
       nonVegPrice, 
       timings, 
-      applicationUrl 
+      applicationUrl, 
+      googleMapsUrl // Added googleMapsUrl
     } = body;
 
     if (!name || !address || !city || !createdBy) {
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
       nonVegPrice,
       timings,
       applicationUrl,
+      googleMapsUrl, // Include googleMapsUrl here
     });
 
     await newMess.save();

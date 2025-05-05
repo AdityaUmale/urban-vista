@@ -6,11 +6,11 @@ import mongoose from 'mongoose';
 // GET handler for fetching a single mess listing by ID
 export async function GET(
   request: Request, 
-  { params }: { params: { id: string } } // Destructure params here
+  { params }: { params: { id: string } } // Correct: Destructuring params from the second argument
 ) {
   try {
     await connectDB();
-    const { id } = params; // Access id directly from the destructured params
+    const { id } = params; // Correct: Accessing id from destructured params
 
     // Validate the ID format
     if (!mongoose.Types.ObjectId.isValid(id)) {

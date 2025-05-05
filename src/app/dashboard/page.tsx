@@ -62,12 +62,6 @@ export default function CategoriesPage() {
       href: "/transportation",
     },
     {
-      icon: <Building2 className="h-6 w-6 text-primary" />,
-      title: "Real Estate",
-      description: "Browse properties for sale and investment opportunities",
-      href: "/real-estate",
-    },
-    {
       icon: <Briefcase className="h-6 w-6 text-primary" />,
       title: "Jobs",
       description: "Find employment opportunities and career services",
