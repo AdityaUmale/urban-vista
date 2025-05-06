@@ -15,10 +15,11 @@ interface TransportationCardProps {
     _id: string;
     name: string;
     address: string;
-    Phone: string;
-    WebsiteLink: string;
-    Description: string;
-    Image: string;
+    phone?: string;         // Changed from Phone
+    websiteLink?: string;   // Changed from WebsiteLink
+    description?: string;   // Changed from Description
+    image?: string;         // Changed from Image
+    googleMapsUrl?: string; // Added new field
     createdBy: string;
     city: string;
     type?: string;
@@ -35,7 +36,7 @@ export default function TransportationCard({ transportation }: TransportationCar
   const [imageError, setImageError] = useState(false)
   
   // Extract domain name from website link for display
-  const websiteDomain = transportation.WebsiteLink ? transportation.WebsiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") : ""
+  const websiteDomain = transportation.websiteLink ? transportation.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") : ""
   
   // Get initials for avatar fallback - with null check
   const getInitials = (name: string = "") => {
@@ -48,17 +49,17 @@ export default function TransportationCard({ transportation }: TransportationCar
   }
 
   // Check if the image URL is a Google search URL - with null check
-  const isGoogleSearchUrl = transportation.Image?.includes("google.com/url");
+  const isGoogleSearchUrl = transportation.image?.includes("google.com/url");
 
   // Determine if we should show the fallback
-  const showFallback = !transportation.Image || imageError || isGoogleSearchUrl;
+  const showFallback = !transportation.image || imageError || isGoogleSearchUrl;
 
   // Handle external website click
   const handleWebsiteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (transportation.WebsiteLink) {
-      window.open(transportation.WebsiteLink, '_blank', 'noopener,noreferrer');
+    if (transportation.websiteLink) {
+      window.open(transportation.websiteLink, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -68,7 +69,7 @@ export default function TransportationCard({ transportation }: TransportationCar
         <div className="relative h-48 w-full bg-gray-100">
           {!showFallback ? (
             <Image
-              src={transportation.Image}
+              src={transportation.image}
               alt={transportation.name}
               fill
               className="object-cover"
@@ -104,18 +105,18 @@ export default function TransportationCard({ transportation }: TransportationCar
 
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {transportation.Description || 'No description available'}
+            {transportation.description || 'No description available'}
           </p>
 
           <div className="space-y-2">
-            {transportation.Phone && (
+            {transportation.phone && (
               <div className="flex items-center">
                 <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                <span className="text-sm">{transportation.Phone}</span>
+                <span className="text-sm">{transportation.phone}</span>
               </div>
             )}
 
-            {transportation.WebsiteLink && (
+            {transportation.websiteLink && (
               <div className="flex items-center">
                 <ExternalLink className="h-4 w-4 mr-2 text-muted-foreground" />
                 <button
@@ -131,6 +132,23 @@ export default function TransportationCard({ transportation }: TransportationCar
               <div className="flex items-center">
                 <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span className="text-sm">{transportation.timings}</span>
+              </div>
+            )}
+
+            {/* Add Google Maps URL if available */}
+            {transportation.googleMapsUrl && (
+              <div className="flex items-center">
+                <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(transportation.googleMapsUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="text-sm text-primary hover:underline text-left"
+                >
+                  View on Maps
+                </button>
               </div>
             )}
           </div>
@@ -152,9 +170,13 @@ export default function TransportationCard({ transportation }: TransportationCar
             size="sm"
             onClick={(e) => {
               e.preventDefault();
-              // Open Google Maps directions
-              const address = encodeURIComponent(transportation.address);
-              window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank', 'noopener,noreferrer');
+              // Use googleMapsUrl if available, otherwise fall back to address search
+              if (transportation.googleMapsUrl) {
+                window.open(transportation.googleMapsUrl, '_blank', 'noopener,noreferrer');
+              } else {
+                const address = encodeURIComponent(transportation.address);
+                window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank', 'noopener,noreferrer');
+              }
             }}
           >
             <MapPin className="h-4 w-4 mr-2" />

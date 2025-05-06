@@ -136,7 +136,10 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
           
           <div className="space-y-2">
             <Label htmlFor="salary">Salary *</Label>
-            <Input id="salary" name="salary" type="number" placeholder="e.g., 50000" required />
+            <Input id="salary" name="salary" type="number" placeholder="e.g., 50000 (in ₹)" required />
+            <p className="text-sm text-muted-foreground mt-1">
+              Please enter the salary in Indian Rupees (₹).
+            </p>
           </div>
           
           <div className="space-y-2">

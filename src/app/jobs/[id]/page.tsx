@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ArrowLeft, DollarSign, Building, CalendarDays, Briefcase } from "lucide-react";
+import { MapPin, ArrowLeft, IndianRupee, Building, CalendarDays, Briefcase } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -154,7 +154,7 @@ export default async function JobDetailPage({
                     {job.type}
                   </Badge>
                   <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                    <DollarSign className="h-3 w-3 mr-1" />
+                    <IndianRupee className="h-3 w-3 mr-1" />
                     {job.salary}
                   </Badge>
                 </div>
