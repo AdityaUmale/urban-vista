@@ -7,7 +7,8 @@ const RentalSchema = new mongoose.Schema({
   description: String,
   image: String,
   createdBy: String,
-  city: String, // Make sure city field is defined here
+  city: String, 
+  googleMapsUrl: { type: String, required: false } // Added Google Maps URL
 });
 
 const Rental = mongoose.models.Rental || mongoose.model('Rental', RentalSchema);

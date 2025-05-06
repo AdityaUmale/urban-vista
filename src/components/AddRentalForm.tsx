@@ -12,6 +12,7 @@ interface FormData {
   description: string;
   image: string;
   city: string;
+  googleMapsUrl?: string; // Added googleMapsUrl
 }
 
 export default function AddRentalForm({ onSuccess }: AddRentalFormProps) {
@@ -24,6 +25,7 @@ export default function AddRentalForm({ onSuccess }: AddRentalFormProps) {
     description: '',
     image: '',
     city: '',
+    googleMapsUrl: '', // Added googleMapsUrl
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -59,6 +61,7 @@ export default function AddRentalForm({ onSuccess }: AddRentalFormProps) {
         description: '',
         image: '',
         city: '',
+        googleMapsUrl: '', // Added googleMapsUrl for reset
       });
       setIsOpen(false);
       
@@ -165,6 +168,23 @@ export default function AddRentalForm({ onSuccess }: AddRentalFormProps) {
                 />
               </div>
 
+              {/* Corrected placement for Google Maps URL field */}
+              <div className="mb-4">
+                <label htmlFor="googleMapsUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Google Maps URL
+                </label>
+                <input
+                  type="url"
+                  id="googleMapsUrl"
+                  name="googleMapsUrl"
+                  value={formData.googleMapsUrl}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="e.g., https://maps.google.com/?q=..."
+                />
+              </div>
+
+              {/* Corrected placement for City field */}
               <div className="mb-4">
                 <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
                   City
@@ -184,25 +204,25 @@ export default function AddRentalForm({ onSuccess }: AddRentalFormProps) {
               </div>
 
               <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Adding...' : 'Add Rental Property'}
-                </button>
-              </div>
-            </form>
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    {isSubmitting ? 'Adding...' : 'Add Rental Property'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
 }

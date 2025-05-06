@@ -128,6 +128,18 @@ export default async function RentalDetailPage({
                   </span>
                 </div>
               )}
+
+              {/* Add Google Maps URL link here */}
+              {rental.googleMapsUrl && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <Link href={rental.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline group-hover:text-primary-dark transition-colors">
+                    View on Google Maps
+                  </Link>
+                </div>
+              )}
               
               <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
                 <Mail className="h-4 w-4 mr-2" />

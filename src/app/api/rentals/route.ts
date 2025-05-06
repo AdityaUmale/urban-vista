@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Get request body
-    const { name, address, price, description, image, city } = await request.json();
+    const { name, address, price, description, image, city, googleMapsUrl } = await request.json(); // Added googleMapsUrl
     
     // Create new rental
     const newRental = new Rental({
@@ -38,7 +38,8 @@ export async function POST(request: Request) {
       price,
       description,
       image,
-      city, // Make sure city is included here
+      city, 
+      googleMapsUrl, // Added googleMapsUrl
       createdBy: 'anonymous',
     });
     
