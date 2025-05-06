@@ -27,7 +27,9 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     
-    const { name, address, phone, websiteLink, description, image, city } = await request.json();
+    const body = await request.json();
+    console.log('Received data:', body); // Log the received data
+    const { name, address, phone, websiteLink, description, image, city, googleMapsUrl } = body;
     
     const newHospital = new Hospital({
       name,
@@ -37,8 +39,10 @@ export async function POST(request: Request) {
       description,
       image,
       city,
+      googleMapsUrl,
       createdBy: 'anonymous',
     });
+    console.log('Hospital object before save:', newHospital); // Log the object
     
     await newHospital.save();
     

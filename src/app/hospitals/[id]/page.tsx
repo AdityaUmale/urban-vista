@@ -69,6 +69,11 @@ export default async function HospitalDetailPage({ params }: { params: { id: str
     ? hospital.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
     : "";
 
+  // Add a similar variable for Google Maps URL display text if needed, or use the full URL
+  const googleMapsDomain = hospital.googleMapsUrl
+    ? hospital.googleMapsUrl.replace(/^https?:\/\//, "").split('/')[0] // Example: extracts domain
+    : "View on Google Maps";
+
   const isValidImage = hospital.image && 
     typeof hospital.image === 'string' && 
     (hospital.image.startsWith('http://') || hospital.image.startsWith('https://'));
@@ -128,6 +133,23 @@ export default async function HospitalDetailPage({ params }: { params: { id: str
                     className="text-primary hover:text-primary/80 transition-colors"
                   >
                     {websiteDomain}
+                  </a>
+                </div>
+              )}
+
+              {hospital.googleMapsUrl && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-5 w-5 text-primary" /> {/* Using MapPin icon for location */}
+                  </div>
+                  <a
+                    href={hospital.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    {/* You can display the full URL or a custom text like "View on Google Maps" */}
+                    View on Google Maps 
                   </a>
                 </div>
               )}

@@ -10,11 +10,12 @@ interface AddHospitalFormProps {
 interface FormData {
   name: string;
   address: string;
-  phone: string;       // Changed from Phone
-  websiteLink: string; // Changed from WebsiteLink
-  description: string; // Changed from Description
-  image: string;       // Changed from Image
+  phone: string;
+  websiteLink: string;
+  description: string;
+  image: string;
   city: string;
+  googleMapsUrl: string; // Added googleMapsUrl
 }
 
 export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
@@ -23,11 +24,12 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     address: '',
-    phone: '',       // Changed from Phone
-    websiteLink: '', // Changed from WebsiteLink
-    description: '', // Changed from Description
-    image: '',       // Changed from Image
+    phone: '',
+    websiteLink: '',
+    description: '',
+    image: '',
     city: '',
+    googleMapsUrl: '', // Added googleMapsUrl
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -59,11 +61,12 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
       setFormData({
         name: '',
         address: '',
-        Phone: '',
-        WebsiteLink: '',
-        Description: '',
-        Image: '',
+        phone: '',       // Corrected casing
+        websiteLink: '', // Corrected casing
+        description: '', // Corrected casing
+        image: '',       // Corrected casing
         city: '',
+        googleMapsUrl: '',
       });
       setIsOpen(false);
       
@@ -183,6 +186,20 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="googleMapsUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Google Maps URL
+                </label>
+                <input
+                  type="url"
+                  id="googleMapsUrl"
+                  name="googleMapsUrl"
+                  value={formData.googleMapsUrl}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
 

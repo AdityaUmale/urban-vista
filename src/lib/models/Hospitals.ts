@@ -8,6 +8,7 @@ const hospitalSchema = new Schema({
   description: { type: String, required: true },
   image: { type: String, required: true },
   city: { type: String, required: true },
+  googleMapsUrl: { type: String, required: false }, // <<< CHECK THIS LINE VERY CAREFULLY
   createdBy: { type: String, required: true },
 });
 
