@@ -130,6 +130,20 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
             <Input id="city" name="city" placeholder="Enter city name" />
           </div>
           
+          {/* Add Google Maps URL field */}
+          <div className="space-y-2">
+            <Label htmlFor="googleMapsUrl">Google Maps URL</Label>
+            <Input 
+              id="googleMapsUrl" 
+              name="googleMapsUrl" 
+              type="url" 
+              placeholder="e.g., https://maps.app.goo.gl/xxxx"
+            />
+            <p className="text-sm text-muted-foreground mt-1">
+              Paste a direct Google Maps URL for this location
+            </p>
+          </div>
+          
           <div className="space-y-2">
             <Label htmlFor="type">Type</Label>
             <Input id="type" name="type" placeholder="e.g., Bus, Train, Metro" />

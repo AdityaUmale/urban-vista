@@ -125,6 +125,7 @@ export default async function TransportationDetailPage({
                 </div>
               )}
               
+             
               {transportation.address && (
                 <div className="flex items-center group">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
@@ -137,9 +138,41 @@ export default async function TransportationDetailPage({
                 </div>
               )}
               
-              <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
-                Get Directions
-              </Button>
+              {/* Add Google Maps URL link */}
+              {transportation.googleMapsUrl && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Maps</p>
+                    <Link 
+                      href={transportation.googleMapsUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-primary hover:underline font-medium"
+                    >
+                      View on Google Maps
+                    </Link>
+                  </div>
+                </div>
+              )}
+              
+              {/* Update the Get Directions button */}
+              <Link 
+                href={transportation.googleMapsUrl || 
+                  (transportation.address ? 
+                    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(transportation.address)}` : 
+                    '#')
+              } 
+              target="_blank" 
+              rel="noopener noreferrer"
+              >
+                <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Get Directions
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

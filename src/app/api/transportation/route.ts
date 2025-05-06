@@ -26,8 +26,8 @@ export async function POST(request: Request) {
     const db = await connectDB()
     const data = await request.json()
 
-    // Validate required fields
-    const requiredFields = ['name', 'address', 'type', 'timings', 'description', 'image']
+    // Validate required fields (googleMapsUrl is optional)
+    const requiredFields = ['name', 'type', 'timings', 'description', 'image']
     const missingFields = requiredFields.filter(field => !data[field])
     
     if (missingFields.length > 0) {
@@ -64,8 +64,10 @@ export async function POST(request: Request) {
       )
     }
 
+    // Create transportation object with googleMapsUrl included
     const transportation = {
       ...data,
+      googleMapsUrl: data.googleMapsUrl || null, // Add googleMapsUrl field, default to null if not provided
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -89,4 +91,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-} 
+}
