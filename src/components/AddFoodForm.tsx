@@ -8,14 +8,15 @@ interface AddFoodFormProps {
 interface FormData {
   name: string;
   address: string;
-  phone: string;         // Remove optional
-  websiteLink: string;   // Remove optional
+  phone: string;
+  websiteLink: string;
   description: string;   
   image: string;         
   cuisine?: string;
   rating?: string;
   hours?: string;
   city: string;
+  googleMapsUrl?: string; // Added googleMapsUrl
 }
 
 export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
@@ -31,7 +32,8 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
     cuisine: '',
     rating: '',
     hours: '',
-    city: ''
+    city: '',
+    googleMapsUrl: '' // Added googleMapsUrl
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -77,7 +79,8 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
         cuisine: '',
         rating: '',
         hours: '',
-        city: ''
+        city: '',
+        googleMapsUrl: '' // Added googleMapsUrl for reset
       });
       setIsOpen(false);
       
@@ -193,6 +196,21 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="googleMapsUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Google Maps URL
+                </label>
+                <input
+                  type="url"
+                  id="googleMapsUrl"
+                  name="googleMapsUrl"
+                  value={formData.googleMapsUrl}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="e.g., https://maps.google.com/?q=..."
                 />
               </div>
 

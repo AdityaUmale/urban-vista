@@ -143,22 +143,22 @@ export default async function FoodDetailPage({ params }: { params: { id: string 
           <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
             <h2 className="text-xl font-semibold mb-6 text-gray-800">Contact Information</h2>
             <div className="space-y-5">
-              {foodPlace.Phone && (
+              {foodPlace.phone && ( // Corrected to lowercase 'phone'
                 <div className="flex items-center group">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
                     <Phone className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{foodPlace.Phone}</span>
+                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{foodPlace.phone}</span>
                 </div>
               )}
               
-              {foodPlace.WebsiteLink && (
+              {foodPlace.websiteLink && ( // Corrected to lowercase 'websiteLink'
                 <div className="flex items-center group">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
                     <ExternalLink className="h-5 w-5 text-primary" />
                   </div>
                   <a
-                    href={foodPlace.WebsiteLink}
+                    href={foodPlace.websiteLink} // Corrected to lowercase 'websiteLink'
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:text-primary/80 transition-colors"
@@ -167,13 +167,29 @@ export default async function FoodDetailPage({ params }: { params: { id: string 
                   </a>
                 </div>
               )}
+
+              {foodPlace.googleMapsUrl && ( // Added Google Maps URL display
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <a
+                    href={foodPlace.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    View on Google Maps
+                  </a>
+                </div>
+              )}
               
-              {foodPlace.Hours && (
+              {foodPlace.hours && ( // Corrected to lowercase 'hours' if it exists in your schema like this
                 <div className="flex items-center group">
                   <div className="bg-primary/10 p-3 rounded-full mr-4">
                     <Clock className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{foodPlace.Hours}</span>
+                  <span className="text-gray-700 group-hover:text-gray-900 transition-colors">{foodPlace.hours}</span>
                 </div>
               )}
               
@@ -230,7 +246,7 @@ export default async function FoodDetailPage({ params }: { params: { id: string 
             <div className="border-t border-gray-100 pt-8">
               <h2 className="text-xl font-semibold mb-5 text-gray-800">About</h2>
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {foodPlace.description || 'No description available'}  {/* Changed from Description to description */}
+                {foodPlace.description || 'No description available'} 
               </p>
             </div>
           </div>

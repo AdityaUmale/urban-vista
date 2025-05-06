@@ -40,10 +40,8 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     
-    // Parse the multipart form data
     const formData = await readFormData(req);
     
-    // Extract file if it exists
     const pdfFile = formData.get('pdfFile') as File | null;
     let pdfUrl = '';
     let pdfName = '';
@@ -71,7 +69,6 @@ export async function POST(req: NextRequest) {
       pdfName = formData.get('pdfName') as string || pdfFile.name;
     }
     
-    // Create new institute with all form fields
     const newInstitute = new EduInstitute({
       name: formData.get('name'),
       address: formData.get('address'),
@@ -82,7 +79,8 @@ export async function POST(req: NextRequest) {
       city: formData.get('city'),
       pdfUrl: pdfUrl,
       pdfName: pdfName,
-      createdBy: 'anonymous', // Default value
+      googleMapsUrl: formData.get('googleMapsUrl'), // Added googleMapsUrl
+      createdBy: 'anonymous', 
     });
     
     // Save to database

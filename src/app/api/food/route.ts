@@ -29,19 +29,19 @@ export async function POST(request: Request) {
     
     const body = await request.json();
     
-    // Make sure field names match the schema
     const foodData = {
       name: body.name,
       address: body.address,
-      phone: body.phone,         // Ensure this matches the form field
-      websiteLink: body.websiteLink, // Ensure this matches the form field
+      phone: body.phone,
+      websiteLink: body.websiteLink,
       description: body.description,
       image: body.image,
       cuisine: body.cuisine,
       rating: body.rating,
       hours: body.hours,
       city: body.city,
-      createdBy: 'Anonymous User' // Add default user if not provided
+      googleMapsUrl: body.googleMapsUrl, // Added googleMapsUrl
+      createdBy: 'Anonymous User'
     };
     
     // Log the data being sent to MongoDB for debugging

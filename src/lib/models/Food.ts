@@ -11,7 +11,8 @@ const FoodSchema = new mongoose.Schema({
     rating: { type: String },
     hours: { type: String },
     createdBy: { type: String },
-    city: { type: String, required: true }
+    city: { type: String, required: true },
+    googleMapsUrl: { type: String, required: false } // Added Google Maps URL
 });
 
 const Food = mongoose.models.Food || mongoose.model('Food', FoodSchema);

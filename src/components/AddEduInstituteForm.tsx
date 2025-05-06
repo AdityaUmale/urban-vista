@@ -143,6 +143,20 @@ export default function AddEduInstituteForm({ onSuccess }: AddEduInstituteFormPr
             </p>
           </div>
           
+          {/* Add Google Maps URL field */}
+          <div className="space-y-2">
+            <Label htmlFor="googleMapsUrl">Google Maps URL</Label>
+            <Input 
+              id="googleMapsUrl" 
+              name="googleMapsUrl" 
+              type="url" 
+              placeholder="e.g., https://maps.google.com/?q=..."
+            />
+            <p className="text-sm text-muted-foreground mt-1">
+              Enter a valid Google Maps URL.
+            </p>
+          </div>
+          
           {/* Add PDF file upload field */}
           <div className="space-y-2">
             <Label htmlFor="pdfFile">PDF Document (Brochure, Syllabus, etc.)</Label>

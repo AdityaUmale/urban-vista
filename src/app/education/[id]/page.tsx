@@ -131,6 +131,23 @@ export default async function InstituteDetailPage({
                 </div>
               )}
 
+              {/* Display Google Maps URL */}
+              {institute.googleMapsUrl && (
+                <div className="flex items-center group">
+                  <div className="bg-primary/10 p-3 rounded-full mr-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <a
+                    href={institute.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                  >
+                    View on Google Maps
+                  </a>
+                </div>
+              )}
+
               {/* Add PDF Download Button */} 
               {institute.pdfUrl && (
                 <div className="flex items-center group">
