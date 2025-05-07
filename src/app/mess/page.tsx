@@ -30,6 +30,7 @@ export default function MessPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // Add error state
+  const [selectedCity, setSelectedCity] = useState<string>('all'); // Add city filter state
 
   const fetchMesses = async () => {
     setLoading(true);
@@ -66,15 +67,20 @@ export default function MessPage() {
     fetchMesses();
   }, []);
 
-  // Filter messes - this should now be safe as messes is guaranteed to be an array
-  const filteredMesses = messes.filter(mess => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      mess.name.toLowerCase().includes(searchLower) ||
-      mess.address.toLowerCase().includes(searchLower) ||
-      mess.city.toLowerCase().includes(searchLower)
-    );
-  });
+  // Get unique cities from messes
+  const cities = ['all', ...new Set(messes.map(mess => mess.city || 'Unknown'))];
+
+  // Filter messes by selected city and search query
+  const filteredMesses = messes
+    .filter(mess => selectedCity === 'all' || mess.city === selectedCity)
+    .filter(mess => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        mess.name.toLowerCase().includes(searchLower) ||
+        mess.address.toLowerCase().includes(searchLower) ||
+        mess.city.toLowerCase().includes(searchLower)
+      );
+    });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -99,6 +105,25 @@ export default function MessPage() {
         />
       </div>
 
+      {/* City filter dropdown */}
+      <div className="mb-6">
+        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          Filter by City:
+        </label>
+        <select
+          id="city-filter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city === 'all' ? 'All Cities' : city}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -111,7 +136,7 @@ export default function MessPage() {
       ) : filteredMesses.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            {searchQuery
+            {searchQuery || selectedCity !== 'all'
               ? "No messes found matching your search criteria"
               : "No mess listings available at the moment"}
           </p>

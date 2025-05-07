@@ -12,6 +12,7 @@ interface Job {
   title: string
   company: string
   location: string
+  city: string // Add city field to interface
   type: string
   salary: number
   description: string
@@ -24,6 +25,7 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
+  const [selectedCity, setSelectedCity] = useState<string>('all') // Add city filter state
 
   const fetchJobs = async () => {
     try {
@@ -42,15 +44,21 @@ export default function JobsPage() {
     fetchJobs()
   }, [])
 
-  const filteredJobs = jobs.filter(job => {
-    const searchLower = searchQuery.toLowerCase()
-    return (
-      job.title.toLowerCase().includes(searchLower) ||
-      job.company.toLowerCase().includes(searchLower) ||
-      job.location.toLowerCase().includes(searchLower) ||
-      job.type.toLowerCase().includes(searchLower)
-    )
-  })
+  // Get unique cities from jobs
+  const cities = ['all', ...new Set(jobs.map(job => job.city || 'Unknown'))];
+
+  // Filter jobs by selected city and search query
+  const filteredJobs = jobs
+    .filter(job => selectedCity === 'all' || job.city === selectedCity)
+    .filter(job => {
+      const searchLower = searchQuery.toLowerCase()
+      return (
+        job.title.toLowerCase().includes(searchLower) ||
+        job.company.toLowerCase().includes(searchLower) ||
+        job.location.toLowerCase().includes(searchLower) ||
+        job.type.toLowerCase().includes(searchLower)
+      )
+    })
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -75,6 +83,25 @@ export default function JobsPage() {
         />
       </div>
 
+      {/* City filter dropdown */}
+      <div className="mb-6">
+        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+          Filter by City:
+        </label>
+        <select
+          id="city-filter"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city === 'all' ? 'All Cities' : city}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -82,7 +109,7 @@ export default function JobsPage() {
       ) : filteredJobs.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            {searchQuery
+            {searchQuery || selectedCity !== 'all'
               ? "No jobs found matching your search criteria"
               : "No jobs available at the moment"}
           </p>
@@ -96,4 +123,4 @@ export default function JobsPage() {
       )}
     </div>
   )
-} 
+}

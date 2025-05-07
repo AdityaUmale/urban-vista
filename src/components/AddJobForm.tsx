@@ -114,32 +114,49 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Job Title *</Label>
-            <Input id="title" name="title" required />
+          {/* Two-column layout for shorter fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Job Title *</Label>
+              <Input id="title" name="title" required />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="company">Company Name *</Label>
+              <Input id="company" name="company" required />
+            </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="company">Company Name *</Label>
-            <Input id="company" name="company" required />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="location">Location *</Label>
+              <Input id="location" name="location" required />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="city">City *</Label>
+              <select
+                id="city"
+                name="city"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                defaultValue="Akola"
+                required
+              >
+                <option value="Akola">Akola</option>
+              </select>
+            </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="location">Location *</Label>
-            <Input id="location" name="location" required />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="type">Job Type *</Label>
-            <Input id="type" name="type" placeholder="e.g., Full-time, Part-time, Remote" required />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="salary">Salary *</Label>
-            <Input id="salary" name="salary" type="number" placeholder="e.g., 50000 (in ₹)" required />
-            <p className="text-sm text-muted-foreground mt-1">
-              Please enter the salary in Indian Rupees (₹).
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="type">Job Type *</Label>
+              <Input id="type" name="type" placeholder="e.g., Full-time, Part-time" required />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="salary">Salary (₹) *</Label>
+              <Input id="salary" name="salary" type="number" required />
+            </div>
           </div>
           
           <div className="space-y-2">
@@ -147,42 +164,38 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
             <Textarea id="description" name="description" required />
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="image">Company Logo URL *</Label>
-            <Input 
-              id="image" 
-              name="image" 
-              type="url" 
-              required
-              onChange={() => setImageError(false)}
-            />
-            {imageError && (
-              <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
-                <AlertCircle className="h-4 w-4" />
-                <span>Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary</span>
-              </div>
-            )}
-            {!imageError && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Use direct image URLs from: Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary. 
-                Don&apos;t use Google Images search URLs.
-              </p>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="image">Company Logo URL *</Label>
+              <Input 
+                id="image" 
+                name="image" 
+                type="url" 
+                required
+                onChange={() => setImageError(false)}
+              />
+              {imageError && (
+                <div className="flex items-center gap-2 text-sm text-red-500 mt-1">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>Invalid image URL</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="applicationUrl">Application URL *</Label>
+              <Input 
+                id="applicationUrl" 
+                name="applicationUrl" 
+                type="url" 
+                required
+              />
+            </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="applicationUrl">Application Form URL *</Label>
-            <Input 
-              id="applicationUrl" 
-              name="applicationUrl" 
-              type="url" 
-              placeholder="e.g., https://forms.gle/example"
-              required
-            />
-            <p className="text-sm text-muted-foreground mt-1">
-              Paste your Google Form URL or any application form link here
-            </p>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Use image URLs from: Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary.
+          </p>
           
           <div className="flex justify-end space-x-2">
             <Button
