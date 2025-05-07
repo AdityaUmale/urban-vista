@@ -165,10 +165,6 @@ export default async function InstituteDetailPage({
                 </div>
               )}
               
-              <Button className="w-full mt-6 rounded-lg h-12 font-medium shadow-sm">
-                <Mail className="h-4 w-4 mr-2" />
-                Contact Institute
-              </Button>
             </div>
           </div>
         </div>

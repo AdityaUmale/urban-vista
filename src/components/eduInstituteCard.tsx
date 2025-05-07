@@ -146,7 +146,7 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
           </div>
 
           {/* Show PDF download button if available, otherwise show contact button */}
-          {institute.pdfUrl ? (
+          
             <Button 
               variant="outline" 
               size="sm"
@@ -155,19 +155,6 @@ export default function EduInstituteCard({ institute }: EduInstituteProps) {
               <FileDown className="h-4 w-4 mr-2" />
               Download
             </Button>
-          ) : (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                // You can add contact functionality here
-              }}
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Contact
-            </Button>
-          )}
         </CardFooter>
       </Card>
     </Link>
