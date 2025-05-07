@@ -127,7 +127,16 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
           {/* Add city field */}
           <div className="space-y-2">
             <Label htmlFor="city">City</Label>
-            <Input id="city" name="city" placeholder="Enter city name" />
+            <select
+              aria-label="Select city"
+              id="city"
+              name="city"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              defaultValue="Akola"
+              required
+            >
+              <option value="Akola">Akola</option>
+            </select>
           </div>
           
           {/* Add Google Maps URL field */}

@@ -28,7 +28,7 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
     websiteLink: '',
     description: '',
     image: '',
-    city: '',
+    city: 'Akola', // Set default city to Akola
     googleMapsUrl: '', // Added googleMapsUrl
   });
 
@@ -65,7 +65,7 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
         websiteLink: '', // Corrected casing
         description: '', // Corrected casing
         image: '',       // Corrected casing
-        city: '',
+        city: 'Akola',   // Reset to Akola instead of empty string
         googleMapsUrl: '',
       });
       setIsOpen(false);
@@ -215,9 +215,7 @@ export default function AddHospitalForm({ onSuccess }: AddHospitalFormProps) {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 >
-                  <option value="">Select a city</option>
-                  <option value="Mumbai">Mumbai</option>
-                  <option value="Pune">Pune</option>
+                  <option value="Akola">Akola</option>
                 </select>
               </div>
 

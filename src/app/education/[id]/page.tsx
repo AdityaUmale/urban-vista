@@ -164,7 +164,6 @@ export default async function InstituteDetailPage({
                   </a>
                 </div>
               )}
-              
             </div>
           </div>
         </div>
