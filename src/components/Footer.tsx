@@ -1,145 +1,193 @@
-'use client';
+import React, { useEffect, useRef, useState } from "react";
 
-import Link from "next/link"
-import { Github, Twitter, Linkedin, Mail, MapPin, Phone } from "lucide-react"
-import { motion } from "motion/react"
+const WORDS = [
+  "Success",
+  "Growth",
+  "Performance",
+  "Revenue",
+  "Opportunities",
+  "Results",
+  "Achievement",
+];
 
-export default function Footer() {
+// Each vertical word component
+function VerticalText({
+  text,
+  highlighted,
+}: {
+  text: string;
+  highlighted: boolean;
+}) {
   return (
-    <footer className="border-t dark:border-neutral-800 bg-gradient-to-b from-transparent to-neutral-50 dark:to-neutral-900">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-xl font-bold mb-4 dark:text-white flex items-center gap-2">
-              <span className="bg-primary/10 dark:bg-primary/20 p-2 rounded-lg">
-                Urban Vista
-              </span>
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Connecting people with opportunities and services in their community. 
-              Making urban living more accessible and efficient.
-            </p>
-            <div className="mt-4 flex space-x-4">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
+    <span
+      className={`font-sans select-none transition-colors duration-500 font-medium block`}
+      style={{
+        color: highlighted ? "#fff" : "#666",
+        fontSize: highlighted ? 32 : 28,
+        fontWeight: highlighted ? 600 : 500,
+        writingMode: "vertical-lr",
+        textOrientation: "mixed",
+        letterSpacing: "2px",
+        textShadow: highlighted
+          ? "0 2px 16px #fff8"
+          : "none",
+        transition: "color 0.3s, font-size 0.3s",
+        margin: 0,
+        padding: 0,
+      }}
+    >
+      {text}
+    </span>
+  );
+}
+
+const ITEM_GAP = 8; // DENSE: Reduced gap px between each word
+
+const FooterCarousel: React.FC = () => {
+  const [offset, setOffset] = useState(0);
+  const [highlightedIdx, setHighlightedIdx] = useState(0);
+
+  // Repeat enough words to fill screen multiple times for fake "infinite" carousel effect
+  const MIN_WORDS_SHOWN = 50;
+  const repeatedWords = Array(Math.ceil(MIN_WORDS_SHOWN / WORDS.length) + 2)
+    .fill(WORDS)
+    .flat();
+
+  // Carousel Reference for width
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const wordRef = useRef<HTMLDivElement | null>(null);
+  const [wordWidth, setWordWidth] = useState(0);
+
+  // Measure vertical word real width
+  useEffect(() => {
+    if (wordRef.current) {
+      setWordWidth(wordRef.current.offsetWidth + ITEM_GAP);
+    }
+  }, []);
+
+  // Animate the offset to the left, loop when it passes one word's width
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOffset((curOffset) => {
+        // When one word scrolled, loop seamlessly
+        if (wordWidth && curOffset >= wordWidth * WORDS.length) {
+          return 0;
+        }
+        return curOffset + 2; // pixels per frame, adjust for speed
+      });
+      // Highlight as the next word becomes center: calculate based on offset
+      if (wordWidth) {
+        setHighlightedIdx((curIdx) => (Math.floor((offset + wordWidth / 2) / wordWidth) % WORDS.length));
+      }
+    }, 16); // ~60fps
+    return () => clearInterval(interval);
+  }, [offset, wordWidth]);
+
+  return (
+    <div
+      className="w-full flex items-center justify-center relative overflow-x-hidden"
+      style={{
+        height: 220,
+        background: "transparent",
+        zIndex: 2, // above curve
+        marginTop: "-32px", // pull up to fill curve area but not under it
+        pointerEvents: "none", // Make sure not clickable over links
+      }}
+    >
+      <div
+        className="flex items-end transition-none"
+        style={{
+          gap: ITEM_GAP,
+          transform: `translateX(-${offset}px)`,
+          willChange: "transform",
+          minWidth: "100vw",
+        }}
+        ref={containerRef}
+      >
+        {repeatedWords.map((word, idx) => {
+          // Only one highlight: Highlight the word that's closest to the center.
+          let highlight = false;
+          // Calculate the left position of this word in pixels (approximate)
+          const left = idx * wordWidth - offset;
+          // Get viewport center:
+          const center = typeof window !== "undefined" ? window.innerWidth / 2 : 400;
+          // We want to highlight the word whose center is closest to window center
+          if (wordWidth) {
+            const wordCenter = left + wordWidth / 2;
+            if (Math.abs(wordCenter - center) < wordWidth / 2) {
+              highlight = true;
+            }
+          }
+          return (
+            <div
+              key={idx}
+              ref={idx === 0 ? wordRef : undefined}
+              className="flex flex-col items-center"
+              style={{
+                minWidth: 32,
+                userSelect: "none",
+              }}
+            >
+              <VerticalText text={word} highlighted={highlight} />
             </div>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Quick Links</h3>
-            <ul className="space-y-3">
-              {[
-                { href: "/", label: "Home" },
-                { href: "/jobs", label: "Jobs" },
-                { href: "/hospitals", label: "Hospitals" },
-                { href: "/transportation", label: "Transportation" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Contact</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>123 Urban Street, City</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span>contact@urbanvista.com</span>
-              </li>
-            </ul>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <h3 className="text-lg font-semibold mb-4 dark:text-white">Newsletter</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Subscribe to our newsletter for updates and news.
-            </p>
-            <form className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-2 rounded-lg border dark:border-neutral-800 bg-white dark:bg-neutral-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm"
-              >
-                Subscribe
-              </button>
-            </form>
-          </motion.div>
-        </div>
-        
-        <motion.div 
-          className="mt-12 pt-8 border-t dark:border-neutral-800"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-sm text-center text-muted-foreground">
-            © {new Date().getFullYear()} Urban Vista. All rights reserved.
-          </p>
-        </motion.div>
+          );
+        })}
       </div>
+    </div>
+  );
+};
+
+// Footer curve remains unchanged
+function FooterCurve({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="footer-curve relative overflow-hidden bg-black">
+      {/* The SVG creates the top curve */}
+      <svg
+        className="absolute top-0 left-0 w-full h-[22vw] min-h-[150px] max-h-[320px] -translate-y-1 pointer-events-none z-10"
+        viewBox="0 0 1920 320"
+        fill="none"
+        preserveAspectRatio="none"
+      >
+        <path
+          d="M0,320 C600,0 1320,0 1920,320 L1920,0 L0,0 Z"
+          fill="black"
+        />
+      </svg>
+      <div className="relative pt-[9vw] pb-8 flex flex-col items-center z-20">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export const Footer = () => {
+  return (
+    <footer className="relative bg-black text-white overflow-x-clip">
+      <FooterCurve>
+        {/* Center "logo": use a placeholder icon, replace with your SVG if needed */}
+        <div className="flex justify-center mb-6">
+          <div className="w-14 h-14 rounded-xl bg-[#111] flex items-center justify-center shadow-2xl">
+            {/* Example fallback, swap with real logo */}
+            <span className="block w-7 h-7 bg-white rounded-[6px] shadow-xl" />
+          </div>
+        </div>
+        {/* Footer text and links */}
+        <div className="flex flex-col items-center gap-2 mb-2">
+          <div className="text-sm text-zinc-300 font-sans mb-1">
+            © 2025 SalesKat. All rights reserved.
+          </div>
+          <div className="flex flex-wrap gap-4 justify-center text-xs text-zinc-400">
+            <a href="#" className="hover:underline">Privacy</a>
+            <a href="#" className="hover:underline">Terms of Service</a>
+            <a href="#" className="hover:underline">Cookie Policy</a>
+            <a href="#" className="hover:underline">Support</a>
+            <a href="#" className="hover:underline">Contact</a>
+          </div>
+        </div>
+      </FooterCurve>
+      {/* Curve border rides above carousel */}
+      {/* Place under curve but above very bottom */}
+      <FooterCarousel />
     </footer>
-  )
-} 
+  );
+};
