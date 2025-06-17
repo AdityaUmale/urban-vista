@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Github, Mail } from "lucide-react";
+import { Button } from "@/components/ui";
+import { Input } from "@/components/ui";
+import { Label } from "@/components/ui";
+import { Github, Mail, Building } from "lucide-react";
 
 export default function SigninPage() {
   const [email, setEmail] = useState("");
@@ -35,7 +35,6 @@ export default function SigninPage() {
         throw new Error(data.error || "Failed to sign in");
       }
 
-      // Redirect to dashboard on success
       router.push("/dashboard");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred");
@@ -45,38 +44,54 @@ export default function SigninPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      {/* Animated background circles */}
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <div className="absolute w-[72rem] h-[36rem] bg-white rounded-full shadow-2xl animate-pulse">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-300/50 to-transparent rounded-full blur-2xl"></div>
+        </div>
+        <div className="absolute w-[60rem] h-[30rem] bg-white rounded-full shadow-2xl animate-pulse" style={{ animationDelay: '0.5s' }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-300/50 to-transparent rounded-full blur-2xl"></div>
+        </div>
+        <div className="absolute w-[48rem] h-[24rem] bg-white rounded-full shadow-xl animate-pulse" style={{ animationDelay: '1s' }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-200/40 to-blue-200/40 rounded-full blur-xl"></div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden">
           <div className="p-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-500 to-indigo-500 bg-clip-text text-transparent">
-                Welcome Back
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 mt-2">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <Building className="w-8 h-8 text-black" />
+                <h2 className="text-3xl font-bold text-black">
+                  Welcome Back
+                </h2>
+              </div>
+              <p className="text-gray-600">
                 Sign in to your account to continue
               </p>
             </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-700 dark:text-slate-300">
+                <Label htmlFor="email" className="text-gray-700">
                   Email
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={18} />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <Input
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600"
+                    className="pl-10 bg-gray-50 border-gray-200"
                     placeholder="Enter your email"
                     required
                   />
@@ -84,7 +99,7 @@ export default function SigninPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-700 dark:text-slate-300">
+                <Label htmlFor="password" className="text-gray-700">
                   Password
                 </Label>
                 <Input
@@ -92,7 +107,7 @@ export default function SigninPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600"
+                  className="bg-gray-50 border-gray-200"
                   placeholder="Enter your password"
                   required
                 />
@@ -100,7 +115,7 @@ export default function SigninPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-600 hover:to-indigo-600 text-white font-medium py-2 rounded-lg transition-all duration-300"
+                className="w-full bg-black text-white hover:bg-gray-800 font-medium py-2 rounded-full shadow-lg transition-all duration-300"
                 disabled={loading}
               >
                 {loading ? "Signing in..." : "Sign In"}
@@ -110,10 +125,10 @@ export default function SigninPage() {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                  <span className="px-2 bg-white text-gray-500">
                     Or continue with
                   </span>
                 </div>
@@ -122,14 +137,14 @@ export default function SigninPage() {
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+                  className="w-full border-gray-200 hover:bg-gray-50"
                 >
                   <Github className="mr-2 h-4 w-4" />
                   GitHub
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+                  className="w-full border-gray-200 hover:bg-gray-50"
                 >
                   <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                     <path
@@ -155,12 +170,12 @@ export default function SigninPage() {
             </div>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-slate-500 dark:text-slate-400">
+              <span className="text-gray-600">
                 Don&apos;t have an account?{" "}
               </span>
               <Link
                 href="/signup"
-                className="font-medium text-sky-500 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300"
+                className="font-medium text-black hover:text-gray-800"
               >
                 Sign up
               </Link>

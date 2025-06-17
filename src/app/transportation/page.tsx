@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react';
 import TransportationCard from '../../components/TransportationCard';
 import AddTransportationForm from '@/components/AddTransportationForm';
-
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Input } from '@/components/ui';
+import { Search, Bus, MapPin } from 'lucide-react';
 
 // Update your Transportation interface to include city
 interface Transportation {
@@ -37,20 +36,14 @@ export default function TransportationPage() {
       }
       
       const data = await response.json();
-      console.log('Fetched transportation data:', data); // Debug log
       
-      // Check different possible response formats
       if (Array.isArray(data)) {
-        // If the response is directly an array
         setTransportations(data);
       } else if (data.transportations && Array.isArray(data.transportations)) {
-        // If the response has a transportations property that is an array
         setTransportations(data.transportations);
       } else if (data.transportation && Array.isArray(data.transportation)) {
-        // If the response has a transportation property that is an array
         setTransportations(data.transportation);
       } else if (data.data && Array.isArray(data.data)) {
-        // If the response has a data property that is an array
         setTransportations(data.data);
       } else {
         console.error('Expected transportations array but got:', data);
@@ -88,10 +81,15 @@ export default function TransportationPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6">Transportation Services</h1>
-        <div className="flex justify-center items-center min-h-[50vh]">
-          <p>Loading transportation services...</p>
+      <div className="min-h-screen bg-gray-100">
+        <div className="container mx-auto p-4">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <Bus className="w-8 h-8 text-black" />
+            <h1 className="text-3xl font-bold text-black">Transportation Services</h1>
+          </div>
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <p className="text-gray-600">Loading transportation services...</p>
+          </div>
         </div>
       </div>
     );
@@ -99,70 +97,118 @@ export default function TransportationPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6">Transportation Services</h1>
-        <div className="flex justify-center items-center min-h-[50vh]">
-          <p className="text-red-500">{error}</p>
+      <div className="min-h-screen bg-gray-100">
+        <div className="container mx-auto p-4">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <Bus className="w-8 h-8 text-black" />
+            <h1 className="text-3xl font-bold text-black">Transportation Services</h1>
+          </div>
+          <div className="flex justify-center items-center min-h-[50vh]">
+            <p className="text-red-500">{error}</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Transportation Services</h1>
-        <AddTransportationForm onSuccess={fetchTransportations} />
-      </div>
-      
-      {/* Search bar */}
-      <div className="mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Search transportation services by name, address, or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 w-full"
-          />
+    <div className="min-h-screen bg-gray-100 relative overflow-hidden">
+      {/* Animated background circles */}
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <div className="absolute w-[72rem] h-[36rem] bg-white rounded-full shadow-2xl animate-pulse">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-300/50 to-transparent rounded-full blur-2xl"></div>
+        </div>
+        <div className="absolute w-[60rem] h-[30rem] bg-white rounded-full shadow-2xl animate-pulse" style={{ animationDelay: '0.5s' }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-300/50 to-transparent rounded-full blur-2xl"></div>
+        </div>
+        <div className="absolute w-[48rem] h-[24rem] bg-white rounded-full shadow-xl animate-pulse" style={{ animationDelay: '1s' }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-200/40 to-blue-200/40 rounded-full blur-xl"></div>
         </div>
       </div>
-      
-      {/* City filter dropdown */}
-      <div className="mb-6">
-        <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
-          Filter by City:
-        </label>
-        <select
-          id="city-filter"
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-          className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        >
-          {cities.map(city => (
-            <option key={city} value={city}>
-              {city === 'all' ? 'All Cities' : city}
-            </option>
-          ))}
-        </select>
-      </div>
-      
-      
-      
-      {filteredTransportations.length === 0 ? (
-        <p className="text-center">
-          {searchQuery 
-            ? "No transportation services found matching your search." 
-            : "No transportation services found for the selected city."}
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTransportations.map((transportation) => (
-            <TransportationCard key={transportation._id} transportation={transportation} />
-          ))}
+
+      <div className="container mx-auto p-4 relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <div className="p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-sm">
+              <Bus className="w-8 h-8 text-black" />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-black mb-4">Transportation Services</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Find reliable transportation services in your area. Search, filter, and explore local transit options.
+          </p>
         </div>
-      )}
+
+        {/* Action Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+          <div className="w-full md:w-auto">
+            <AddTransportationForm onSuccess={fetchTransportations} />
+          </div>
+          <div className="w-full md:w-auto flex items-center gap-2 text-sm text-gray-600">
+            <MapPin className="w-4 h-4" />
+            <span>{transportations.length} transportation services available</span>
+          </div>
+        </div>
+        
+        {/* Search and Filter Section */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm p-8 mb-8 transform transition-all duration-300 hover:shadow-md">
+          {/* Search bar */}
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search transportation services by name, address, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 w-full bg-gray-50 border-gray-200 h-12 text-lg rounded-xl"
+              />
+            </div>
+          </div>
+          
+          {/* City filter dropdown */}
+          <div>
+            <label htmlFor="city-filter" className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by City:
+            </label>
+            <select
+              id="city-filter"
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="block w-full max-w-xs px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black text-lg"
+            >
+              {cities.map(city => (
+                <option key={city} value={city}>
+                  {city === 'all' ? 'All Cities' : city}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        {/* Results Section */}
+        {filteredTransportations.length === 0 ? (
+          <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm p-8 transform transition-all duration-300 hover:shadow-md">
+            <div className="flex flex-col items-center space-y-4">
+              <Bus className="w-12 h-12 text-gray-400" />
+              <p className="text-gray-600 text-lg">
+                {searchQuery 
+                  ? "No transportation services found matching your search." 
+                  : "No transportation services found for the selected city."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredTransportations.map((transportation) => (
+              <div key={transportation._id} className="transform transition-all duration-300 hover:scale-105">
+                <TransportationCard transportation={transportation} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

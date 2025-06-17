@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
+import * as LabelPrimitive from "@radix-ui/react-label"
 import { X } from "lucide-react"
 
 // Button Component
@@ -362,6 +363,22 @@ const DialogContent = React.forwardRef<
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
+// Label Component
+const Label = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root
+    ref={ref}
+    className={cn(
+      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+      className
+    )}
+    {...props}
+  />
+))
+Label.displayName = LabelPrimitive.Root.displayName
+
 // Type definitions for Toast
 type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 type ToastActionElement = React.ReactElement<typeof ToastAction>
@@ -398,6 +415,7 @@ export {
   DialogContent,
   DialogClose,
   DialogTrigger,
+  Label,
 }
 
 export type { ToastProps, ToastActionElement }
