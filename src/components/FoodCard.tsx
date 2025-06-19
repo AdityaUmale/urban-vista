@@ -28,11 +28,22 @@ interface FoodCardProps {
 }
 
 export default function FoodCard({ foodPlace }: FoodCardProps) {
+  const [isValidImage, setIsValidImage] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const handleImageError = () => {
+    setIsValidImage(false);
+    setShowFallback(true);
+  };
+
+  const isGoogleSearchUrl = foodPlace.image?.includes("google.com/url");
+  if (!isValidImage || isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
+
   if (!foodPlace) {
     return null;
   }
-
-  const [imageError, setImageError] = useState(false);
 
   // Add getInitials function
   const getInitials = (name: string = "") => {
@@ -47,9 +58,6 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
   const websiteDomain = foodPlace.websiteLink 
     ? foodPlace.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
     : "";
-
-  const isGoogleSearchUrl = foodPlace.image?.includes("google.com/url");
-  const showFallback = !foodPlace.image || imageError || isGoogleSearchUrl;
 
   // Add handleWebsiteClick function
   const handleWebsiteClick = (e: React.MouseEvent) => {
@@ -72,7 +80,7 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
               className="object-cover"
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              onError={() => setImageError(true)}
+              onError={handleImageError}
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">

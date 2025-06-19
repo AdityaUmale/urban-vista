@@ -25,12 +25,22 @@ interface JobCardProps {
 }
 
 export default function JobCard({ job }: JobCardProps) {
-  // Add a safety check at the beginning
+  const [isValidImage, setIsValidImage] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const handleImageError = () => {
+    setIsValidImage(false);
+    setShowFallback(true);
+  };
+
   if (!job) {
-    return null; // Don't render anything if job is undefined
+    return null;
   }
 
-  const [imageError, setImageError] = useState(false);
+  const isGoogleSearchUrl = job.image?.includes("google.com/url");
+  if (!isValidImage || isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
 
   // Format date if available
   const formatDate = (dateString?: string) => {
@@ -52,9 +62,6 @@ export default function JobCard({ job }: JobCardProps) {
     }).format(date);
   };
 
-  // Determine if we should show the fallback
-  const showFallback = !job.image || imageError;
-
   // Handle application button click
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -74,7 +81,7 @@ export default function JobCard({ job }: JobCardProps) {
               fill
               className="object-cover"
               priority
-              onError={() => setImageError(true)}
+              onError={handleImageError}
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">

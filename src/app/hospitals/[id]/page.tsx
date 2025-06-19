@@ -69,11 +69,6 @@ export default async function HospitalDetailPage({ params }: { params: { id: str
     ? hospital.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
     : "";
 
-  // Add a similar variable for Google Maps URL display text if needed, or use the full URL
-  const googleMapsDomain = hospital.googleMapsUrl
-    ? hospital.googleMapsUrl.replace(/^https?:\/\//, "").split('/')[0] // Example: extracts domain
-    : "View on Google Maps";
-
   const isValidImage = hospital.image && 
     typeof hospital.image === 'string' && 
     (hospital.image.startsWith('http://') || hospital.image.startsWith('https://'));

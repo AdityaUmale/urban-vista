@@ -4,7 +4,6 @@ import { join } from 'path';
 import { mkdir } from 'fs/promises';
 import connectDB from '@/lib/db';
 import EduInstitute from '@/lib/models/EduInstitute';
-import { parse } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 
 // Disable body parsing, we'll handle it ourselves
@@ -52,6 +51,7 @@ export async function POST(req: NextRequest) {
       try {
         await mkdir(uploadDir, { recursive: true });
       } catch (err) {
+        console.log(err);
         console.log('Upload directory already exists or cannot be created');
       }
       
@@ -87,12 +87,8 @@ export async function POST(req: NextRequest) {
     await newInstitute.save();
     
     // Return success response
-    return NextResponse.json({ institute: newInstitute }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating educational institute:', error);
-    return NextResponse.json(
-      { error: 'Failed to create educational institute' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Education institute created successfully' });
+  } catch {
+    return NextResponse.json({ error: 'Failed to create education institute' }, { status: 500 });
   }
 }

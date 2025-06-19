@@ -25,12 +25,17 @@ interface HospitalCardProps {
 }
 
 export default function HospitalCard({ hospital }: HospitalCardProps) {
+  const [showFallback, setShowFallback] = useState(false);
+
   if (!hospital) {
     return null;
   }
 
-  const [imageError, setImageError] = useState(false)
-  
+  const isGoogleSearchUrl = hospital.image?.includes("google.com/url");
+  if (isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
+
   const websiteDomain = hospital.websiteLink 
     ? hospital.websiteLink.replace(/^https?:\/\//, "").replace(/\/$/, "") 
     : "";
@@ -44,11 +49,6 @@ export default function HospitalCard({ hospital }: HospitalCardProps) {
       .join("")
       .toUpperCase()
   }
-
-  const isGoogleSearchUrl = hospital.image?.includes("google.com/url");
-  
-  // Define showFallback before using it
-  const showFallback = !hospital.image || imageError || isGoogleSearchUrl;
 
   // Handle external website click
   const handleWebsiteClick = (e: React.MouseEvent) => {

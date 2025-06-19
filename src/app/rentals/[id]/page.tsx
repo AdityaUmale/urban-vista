@@ -33,8 +33,9 @@ async function getRentalById(id: string) {
     
     // Find the specific rental by ID
     return rentals.find((rental: any) => rental._id === id) || null;
-  } catch (error) {
-    console.error("Error fetching rental:", error);
+  } catch (error: unknown) {
+    console.error(`Error fetching rental ${id}:`, error);
+    notFound();
     return null;
   }
 }

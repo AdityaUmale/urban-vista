@@ -1,7 +1,9 @@
 'use client';
 
 import { Button } from "@/components/ui/index";
-import { ArrowRight, Globe, Play, Users, Target, Zap, BarChart3, Shield, Clock, Building, Hospital, Briefcase, Home, School, Utensils } from "lucide-react";
+import { ArrowRight, Globe } from "lucide-react";
+import Image from 'next/image';
+import { Building, Hospital, Briefcase, Home, School, Utensils } from 'lucide-react';
 
 const HomePage = () => {
   const handleLinkClick = () => {
@@ -176,11 +178,15 @@ const HomePage = () => {
       <section className="h-screen relative overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z2xvYmFsJTIwY29ubmVjdGlvbnxlbnwwfHwwfHx8MA%3D%3D" 
-            alt="Background"
-            className="w-full h-full object-cover object-center"
-          />
+          <div className="relative w-full h-[400px] rounded-lg overflow-hidden">
+            <Image
+              src="/images/hero.jpg"
+              alt="Urban Vista Hero"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
           {/* Gradient shadow overlay only at the bottom */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
         </div>
@@ -191,7 +197,7 @@ const HomePage = () => {
             <div className="max-w-4xl mx-auto">
               {/* Main testimonial quote */}
               <h2 className="text-4xl lg:text-5xl font-bold mb-8 leading-relaxed text-white drop-shadow-2xl">
-                "Urban Vista helped me find the perfect apartment and discover amazing local restaurants."
+                &ldquo;Urban Vista helped me find the perfect apartment and discover amazing local restaurants.&rdquo;
               </h2>
               
               {/* Attribution */}

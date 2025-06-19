@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui"
 import { Input } from "@/components/ui"
 import { Search, Briefcase, MapPin } from "lucide-react"
 import AddJobForm from "@/components/AddJobForm"
@@ -14,7 +13,7 @@ interface Job {
   location: string
   city: string
   type: string
-  salary: number
+  salary: string
   description: string
   image: string
   createdAt: string

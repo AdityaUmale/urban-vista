@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react"
-import { Building2, MapPin, DollarSign} from "lucide-react"
+import { MapPin, DollarSign} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -23,26 +23,32 @@ interface RealEstateCardProps {
   };
 }
 
-export default function RealEstateCard({ property }: RealEstateCardProps) {
-  // Add a safety check at the beginning
+export function RealEstateCard({ property }: RealEstateCardProps) {
+  const [isValidImage, setIsValidImage] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const handleImageError = () => {
+    setIsValidImage(false);
+    setShowFallback(true);
+  };
+
   if (!property) {
-    return null; // Don't render anything if property is undefined
+    return null;
   }
 
-  const [imageError, setImageError] = useState(false)
-  
-  // Get initials for avatar fallback - with null check
+  const isGoogleSearchUrl = property.image?.includes("google.com/url");
+  if (!isValidImage || isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
+
+  // Get initials for avatar fallback
   const getInitials = (name: string = "") => {
-    if (!name) return "";
     return name
       .split(" ")
-      .map((part) => part[0])
+      .map((n) => n[0])
       .join("")
-      .toUpperCase()
-  }
-
-  // Determine if we should show the fallback
-  const showFallback = !property.image || imageError;
+      .toUpperCase();
+  };
 
   // Format price
   const formatPrice = (price?: number) => {
@@ -64,12 +70,13 @@ export default function RealEstateCard({ property }: RealEstateCardProps) {
               fill
               className="object-cover"
               priority
-              onError={() => setImageError(true)}
+              onError={handleImageError}
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">
-              <Building2 className="h-12 w-12 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-500">No image available</p>
+              <Avatar className="w-16 h-16">
+                <AvatarFallback>{getInitials(property.name)}</AvatarFallback>
+              </Avatar>
             </div>
           )}
           {property.type && (

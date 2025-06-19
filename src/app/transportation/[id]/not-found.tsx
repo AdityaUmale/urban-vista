@@ -5,8 +5,8 @@ export default function TransportationNotFound() {
   return (
     <div className="container max-w-4xl py-16 flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-4">Transportation Service Not Found</h1>
-      <p className="text-muted-foreground text-lg mb-8">
-        The transportation service you're looking for doesn't exist or has been removed.
+      <p className="text-gray-600">
+        We couldn&apos;t find the transportation service you&apos;re looking for.
       </p>
       <Link 
         href="/transportation" 

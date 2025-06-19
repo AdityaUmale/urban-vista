@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/index";
-import { ArrowRight } from "lucide-react";
+import Image from 'next/image';
 
 export const HowItWorks = () => {
   return (
@@ -95,11 +94,14 @@ export const HowItWorks = () => {
             
             {/* Main Image */}
             <div className="relative z-10 mb-6">
-              <img 
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=300&fit=crop" 
-                alt="Sales professional using AI technology"
-                className="w-full h-48 object-cover rounded-2xl"
-              />
+              <div className="relative w-full h-[200px] rounded-lg overflow-hidden">
+                <Image
+                  src="/images/search.jpg"
+                  alt="Search"
+                  fill
+                  className="object-cover"
+                />
+              </div>
               
               {/* Statistics Overlay */}
               <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-xl">

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ExternalLink, Mail, MapPin, Phone, Building2, FileDown } from "lucide-react"
+import { ExternalLink, MapPin, Phone, FileDown, Building2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 

@@ -57,8 +57,8 @@ async function getMessById(id: string): Promise<IMess | null> {
 
     const mess = await response.json();
     return mess;
-  } catch (error) {
-    console.error(`Error fetching mess ${id}:`, error);
+  } catch {
+    notFound();
     return null;
   }
 }
@@ -93,6 +93,7 @@ export default async function MessDetailPage({
         day: 'numeric'
       }).format(date);
     } catch (e) {
+      console.log(e);
       return "Invalid Date";
     }
   };

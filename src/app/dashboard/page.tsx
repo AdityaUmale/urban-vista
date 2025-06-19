@@ -98,8 +98,8 @@ export default function CategoriesPage() {
             <Building2 className="w-8 h-8 text-black" />
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-black">Categories</h1>
           </div>
-          <p className="text-gray-600 max-w-[700px] mx-auto">
-            Explore our wide range of categories to find exactly what you're looking for
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Welcome to your dashboard. Here you can explore all the services and opportunities in your area.
           </p>
         </div>
 

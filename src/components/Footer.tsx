@@ -45,7 +45,7 @@ const ITEM_GAP = 8; // DENSE: Reduced gap px between each word
 
 const FooterCarousel: React.FC = () => {
   const [offset, setOffset] = useState(0);
-  const [highlightedIdx, setHighlightedIdx] = useState(0);
+  const [wordWidth, setWordWidth] = useState(0);
 
   // Repeat enough words to fill screen multiple times for fake "infinite" carousel effect
   const MIN_WORDS_SHOWN = 50;
@@ -56,7 +56,6 @@ const FooterCarousel: React.FC = () => {
   // Carousel Reference for width
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wordRef = useRef<HTMLDivElement | null>(null);
-  const [wordWidth, setWordWidth] = useState(0);
 
   // Measure vertical word real width
   useEffect(() => {
@@ -68,18 +67,9 @@ const FooterCarousel: React.FC = () => {
   // Animate the offset to the left, loop when it passes one word's width
   useEffect(() => {
     const interval = setInterval(() => {
-      setOffset((curOffset) => {
-        // When one word scrolled, loop seamlessly
-        if (wordWidth && curOffset >= wordWidth * WORDS.length) {
-          return 0;
-        }
-        return curOffset + 2; // pixels per frame, adjust for speed
-      });
-      // Highlight as the next word becomes center: calculate based on offset
-      if (wordWidth) {
-        setHighlightedIdx((curIdx) => (Math.floor((offset + wordWidth / 2) / wordWidth) % WORDS.length));
-      }
-    }, 16); // ~60fps
+      setOffset((prev) => (prev + 1) % (wordWidth * 3));
+    }, 50);
+
     return () => clearInterval(interval);
   }, [offset, wordWidth]);
 

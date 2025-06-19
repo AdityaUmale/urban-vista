@@ -42,8 +42,9 @@ async function getPropertyById(id: string) {
     const property = properties.find((prop: any) => prop._id === id);
     console.log("Found property:", property);
     return property || null;
-  } catch (error) {
-    console.error("Error fetching property:", error);
+  } catch (error: unknown) {
+    console.error(`Error fetching real estate ${id}:`, error);
+    notFound();
     return null;
   }
 }

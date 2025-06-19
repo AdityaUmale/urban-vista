@@ -24,13 +24,23 @@ interface ShoppingCardProps {
 }
 
 export default function ShoppingCard({ shopping }: ShoppingCardProps) {
-  // Add a safety check at the beginning
+  const [isValidImage, setIsValidImage] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const handleImageError = () => {
+    setIsValidImage(false);
+    setShowFallback(true);
+  };
+
   if (!shopping) {
-    return null; // Don't render anything if shopping is undefined
+    return null;
   }
 
-  const [imageError, setImageError] = useState(false)
-  
+  const isGoogleSearchUrl = shopping.image?.includes("google.com/url");
+  if (!isValidImage || isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
+
   // Get initials for avatar fallback - with null check
   const getInitials = (name: string = "") => {
     if (!name) return "";
@@ -40,9 +50,6 @@ export default function ShoppingCard({ shopping }: ShoppingCardProps) {
       .join("")
       .toUpperCase()
   }
-
-  // Determine if we should show the fallback
-  const showFallback = !shopping.image || imageError;
 
   return (
     <Link href={`/shopping/${shopping._id || ""}`} className="block">
@@ -55,7 +62,7 @@ export default function ShoppingCard({ shopping }: ShoppingCardProps) {
               fill
               className="object-cover"
               priority
-              onError={() => setImageError(true)}
+              onError={handleImageError}
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">

@@ -24,13 +24,23 @@ interface RentalCardProps {
 }
 
 export default function RentalCard({ rental }: RentalCardProps) {
-  // Add a safety check at the beginning
+  const [isValidImage, setIsValidImage] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const handleImageError = () => {
+    setIsValidImage(false);
+    setShowFallback(true);
+  };
+
   if (!rental) {
-    return null; // Don't render anything if rental is undefined
+    return null;
   }
 
-  const [imageError, setImageError] = useState(false)
-  
+  const isGoogleSearchUrl = rental.image?.includes("google.com/url");
+  if (!isValidImage || isGoogleSearchUrl) {
+    setShowFallback(true);
+  }
+
   // Get initials for avatar fallback - with null check
   const getInitials = (name: string = "") => {
     if (!name) return "";
@@ -40,12 +50,6 @@ export default function RentalCard({ rental }: RentalCardProps) {
       .join("")
       .toUpperCase()
   }
-
-  // Check if the image URL is a Google search URL - with null check
-  const isGoogleSearchUrl = rental.image?.includes("google.com/url");
-
-  // Determine if we should show the fallback
-  const showFallback = !rental.image || imageError || isGoogleSearchUrl;
 
   return (
     <Link href={`/rentals/${rental._id || ""}`} className="block">
@@ -58,7 +62,7 @@ export default function RentalCard({ rental }: RentalCardProps) {
               fill
               className="object-cover"
               priority
-              onError={() => setImageError(true)}
+              onError={handleImageError}
             />
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gray-100">

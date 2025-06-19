@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, ExternalLink, Mail, MapPin, Phone, ArrowLeft, FileDown } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { Building2, ExternalLink, MapPin, Phone, ArrowLeft, FileDown } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
 
 async function getInstituteById(id: string) {
   try {

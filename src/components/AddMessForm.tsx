@@ -13,9 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, AlertCircle, Utensils } from "lucide-react"; // Changed icon
+import { AlertCircle, Utensils } from "lucide-react";
 import { toast } from "sonner";
-import { MapPin as MapPinIcon } from "lucide-react"; // Import MapPin icon
+import { MapPin as MapPinIcon } from "lucide-react";
 
 interface AddMessFormProps {
   onSuccess: () => void;
@@ -88,7 +88,7 @@ export default function AddMessForm({ onSuccess }: AddMessFormProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mb-6">
-          <Utensils className="w-4 h-4 mr-2" /> {/* Changed icon */}
+          <Utensils className="w-4 h-4 mr-2" />
           Add Mess Listing
         </Button>
       </DialogTrigger>

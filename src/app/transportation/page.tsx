@@ -61,12 +61,6 @@ export default function TransportationPage() {
     fetchTransportations();
   }, []);
 
-  // Debug log for filtered transportations
-  useEffect(() => {
-    console.log('Filtered transportations:', filteredTransportations);
-  }, [transportations, selectedCity, searchQuery]);
-
-  // Get unique cities from transportations
   const cities = ['all', ...new Set(transportations.map(transportation => transportation.city || 'Unknown'))];
   
   // Filter transportations by selected city and search query
