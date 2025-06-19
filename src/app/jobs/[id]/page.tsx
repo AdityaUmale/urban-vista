@@ -36,11 +36,7 @@ async function getJobById(id: string) {
   }
 }
 
-export default async function JobDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
+export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // Fix for the params warning - use Promise.resolve to ensure params is awaited
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;

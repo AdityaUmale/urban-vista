@@ -40,7 +40,7 @@ async function getFoodPlaceById(id: string) {
   }
 }
 
-export default async function FoodDetailPage({ params }: { params: { id: string } }) {
+export default async function FoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;
   

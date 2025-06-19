@@ -75,7 +75,7 @@ export default function MessCard({ mess }: MessCardProps) {
         <div className="relative h-48 w-full bg-gray-100">
           {!showFallback ? (
             <Image
-              src={mess.image}
+              src={mess.image as string}
               alt={mess.name}
               fill
               className="object-cover"

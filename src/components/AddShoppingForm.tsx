@@ -58,10 +58,8 @@ export default function AddShoppingForm({ onSuccess }: AddShoppingFormProps) {
       // Validate image URL before submitting
       if (!isValidImageUrl(formData.get("image") as string)) {
         setImageError(true)
-        toast({
-          title: "Invalid Image URL",
+        toast.error("Invalid Image URL", {
           description: "Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary",
-          variant: "destructive",
         })
         return
       }
@@ -80,18 +78,13 @@ export default function AddShoppingForm({ onSuccess }: AddShoppingFormProps) {
         throw new Error(data.error || "Failed to create shopping place")
       }
 
-      toast({
-        title: "Success",
-        description: "Shopping place added successfully",
-      })
+      toast.success("Shopping place added successfully")
       setOpen(false)
       onSuccess()
     } catch (error) {
       console.error("Error creating shopping place:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: error instanceof Error ? error.message : "Failed to create shopping place",
-        variant: "destructive",
       })
     } finally {
       setLoading(false)
@@ -110,7 +103,7 @@ export default function AddShoppingForm({ onSuccess }: AddShoppingFormProps) {
         <DialogHeader>
           <DialogTitle>Add Shopping Place</DialogTitle>
           <DialogDescription>
-            Fill in the details of the shopping place. Click save when you&apos;re done.
+            Fill in the details of the shopping place. Click save when youre done.
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -156,7 +149,7 @@ export default function AddShoppingForm({ onSuccess }: AddShoppingFormProps) {
             {!imageError && (
               <p className="text-sm text-muted-foreground mt-1">
                 Use direct image URLs from: Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary. 
-                Don&apos;t use Google Images search URLs.
+                Dont use Google Images search URLs.
               </p>
             )}
           </div>
@@ -178,4 +171,4 @@ export default function AddShoppingForm({ onSuccess }: AddShoppingFormProps) {
       </DialogContent>
     </Dialog>
   )
-} 
+}

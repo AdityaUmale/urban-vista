@@ -222,7 +222,7 @@ export default function AddFoodForm({ onSuccess }: AddFoodFormProps) {
                   id="city"
                   name="city"
                   value={formData.city}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleChange(e)}
+                  onChange={() => handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 >

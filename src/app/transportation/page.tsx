@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TransportationCard from '../../components/TransportationCard';
+import { TransportationCard } from '../../components/TransportationCard';
 import AddTransportationForm from '@/components/AddTransportationForm';
 import { Input } from '@/components/ui';
 import { Search, Bus, MapPin } from 'lucide-react';

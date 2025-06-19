@@ -58,10 +58,8 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
       // Validate image URL before submitting
       if (!isValidImageUrl(formData.get("image") as string)) {
         setImageError(true)
-        toast({
-          title: "Invalid Image URL",
+        toast.error("Invalid Image URL", {
           description: "Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary",
-          variant: "destructive",
         })
         return
       }
@@ -80,18 +78,13 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
         throw new Error(data.error || "Failed to create job")
       }
 
-      toast({
-        title: "Success",
-        description: "Job added successfully",
-      })
+      toast.success("Job added successfully")
       setOpen(false)
       onSuccess()
     } catch (error) {
       console.error("Error creating job:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: error instanceof Error ? error.message : "Failed to create job",
-        variant: "destructive",
       })
     } finally {
       setLoading(false)
@@ -110,7 +103,7 @@ export default function AddJobForm({ onSuccess }: AddJobFormProps) {
         <DialogHeader>
           <DialogTitle>Add Job Listing</DialogTitle>
           <DialogDescription>
-            Fill in the details of the job. Click save when you&apos;re done.
+            Fill in the details of the job. Click save when youre done.
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">

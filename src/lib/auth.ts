@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-
 if (!JWT_SECRET) {
   throw new Error('Please define the JWT_SECRET environment variable');
 }
@@ -26,8 +26,8 @@ export async function verifyPassword(
 export function generateToken(payload: { id: string; role: string }): string {
   return jwt.sign(
     {
-          sub: payload.id,
-          role: payload.role,
+      sub: payload.id,
+      role: payload.role,
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -52,7 +52,7 @@ export function verifyToken(token: string): TokenPayload | null {
 }
 
 // Set auth cookie
-export function setAuthCookie(response: any, token: string): any {
+export function setAuthCookie(response: NextResponse, token: string): NextResponse {
   response.cookies.set({
     name: 'authToken',
     value: token,
@@ -61,7 +61,6 @@ export function setAuthCookie(response: any, token: string): any {
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: '/',
   });
-  
   return response;
 }
 

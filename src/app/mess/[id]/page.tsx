@@ -63,11 +63,7 @@ async function getMessById(id: string): Promise<IMess | null> {
   }
 }
 
-export default async function MessDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
+export default async function MessDetailPage({ params }: { params: Promise<{ id: string }> }){
   // Await the params object before accessing its properties
   // Although often not strictly necessary in page components, it's good practice
   const resolvedParams = await Promise.resolve(params);
@@ -125,7 +121,7 @@ export default async function MessDetailPage({
             <div className="relative aspect-square w-full bg-gray-50">
               {!showFallback ? (
                 <Image
-                  src={mess.image}
+                  src={mess.image as string}
                   alt={mess.name}
                   fill
                   className="object-cover"

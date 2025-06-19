@@ -58,10 +58,8 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
       // Validate image URL before submitting
       if (!isValidImageUrl(formData.get("image") as string)) {
         setImageError(true)
-        toast({
-          title: "Invalid Image URL",
+        toast.error("Invalid Image URL", {
           description: "Please use an image from Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary",
-          variant: "destructive",
         })
         return
       }
@@ -80,18 +78,13 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
         throw new Error(data.error || "Failed to create transportation service")
       }
 
-      toast({
-        title: "Success",
-        description: "Transportation service added successfully",
-      })
+      toast.success("Transportation service added successfully")
       setOpen(false)
       onSuccess()
     } catch (error) {
       console.error("Error creating transportation service:", error)
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: error instanceof Error ? error.message : "Failed to create transportation service",
-        variant: "destructive",
       })
     } finally {
       setLoading(false)
@@ -110,7 +103,7 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
         <DialogHeader>
           <DialogTitle>Add Transportation Service</DialogTitle>
           <DialogDescription>
-            Fill in the details of the transportation service. Click save when you&apos;re done.
+            Fill in the details of the transportation service. Click save when youre done.
           </DialogDescription>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -185,7 +178,7 @@ export default function AddTransportationForm({ onSuccess }: AddTransportationFo
             {!imageError && (
               <p className="text-sm text-muted-foreground mt-1">
                 Use direct image URLs from: Unsplash, Wikimedia, Flickr, Imgur, or Cloudinary. 
-                Don&apos;t use Google Images search URLs.
+                Dont use Google Images search URLs.
               </p>
             )}
           </div>

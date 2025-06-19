@@ -46,7 +46,7 @@ export const HowItWorks = () => {
             <div className="mt-8">
               <div className="flex items-center space-x-4 mb-6">
                 <div className="w-16 h-16 rounded-full overflow-hidden">
-                  <img 
+                  <Image
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" 
                     alt="Sales rep"
                     className="w-full h-full object-cover"
@@ -136,22 +136,22 @@ export const HowItWorks = () => {
             </p>
             
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <img 
+              <Image
                 src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" 
                 alt="Sales team member"
                 className="w-12 h-12 rounded-full object-cover"
               />
-              <img 
+              <Image
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" 
                 alt="Sales team member"
                 className="w-12 h-12 rounded-full object-cover"
               />
-              <img 
+              <Image
                 src="https://images.unsplash.com/photo-1494790108755-2616b612b77c?w=80&h=80&fit=crop&crop=face" 
                 alt="Sales team member"
                 className="w-12 h-12 rounded-full object-cover"
               />
-              <img 
+              <Image
                 src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=80&h=80&fit=crop&crop=face" 
                 alt="Sales team member"
                 className="w-12 h-12 rounded-full object-cover"

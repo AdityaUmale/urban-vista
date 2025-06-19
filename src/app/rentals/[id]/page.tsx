@@ -7,7 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-async function getRentalById(id: string) {
+// Define the Rental type
+interface Rental {
+  _id: string;
+  name: string;
+  price?: string;
+  address?: string;
+  city?: string;
+  description?: string;
+  image?: string;
+  googleMapsUrl?: string;
+  createdBy?: string;
+}
+
+async function getRentalById(id: string): Promise<Rental | null> {
   try {
     // Use a hardcoded base URL if the environment variable is not available
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -31,8 +44,8 @@ async function getRentalById(id: string) {
       return null;
     }
     
-    // Find the specific rental by ID
-    return rentals.find((rental: any) => rental._id === id) || null;
+    // Find the specific rental by ID - now properly typed
+    return rentals.find((rental: Rental) => rental._id === id) || null;
   } catch (error: unknown) {
     console.error(`Error fetching rental ${id}:`, error);
     notFound();
@@ -40,11 +53,7 @@ async function getRentalById(id: string) {
   }
 }
 
-export default async function RentalDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
+export default async function RentalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // Fix for the params warning - use Promise.resolve to ensure params is awaited
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;
@@ -87,9 +96,9 @@ export default async function RentalDetailPage({
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8 border border-gray-100">
             <div className="relative aspect-square w-full bg-gray-50">
-              {!showFallback ? (
+              {!showFallback && rental.image ? (
                 <Image
-                  src={rental.image}
+                  src={rental.image as string}
                   alt={rental.name}
                   fill
                   className="object-cover"

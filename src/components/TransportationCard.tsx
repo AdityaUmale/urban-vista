@@ -75,7 +75,7 @@ export function TransportationCard({ transportation }: TransportationCardProps) 
           <h3 className="font-semibold text-lg mb-1">{transportation.name}</h3>
           <p className="text-gray-600 text-sm mb-2">{transportation.address}</p>
           <div className="flex items-center justify-between">
-            <span className="text-primary font-medium">₹{transportation.price}</span>
+            <span className="text-primary font-medium">{transportation.type}</span>
             <span className="text-sm text-gray-500">{transportation.type}</span>
           </div>
         </div>

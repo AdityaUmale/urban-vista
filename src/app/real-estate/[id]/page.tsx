@@ -7,7 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-async function getPropertyById(id: string) {
+// Define the Property type
+interface Property {
+  _id: string;
+  name: string;
+  type?: string;
+  price?: string;
+  address?: string;
+  description?: string;
+  image?: string;
+  createdBy?: string;
+}
+
+async function getPropertyById(id: string): Promise<Property | null> {
   try {
     // Use a hardcoded base URL if the environment variable is not available
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -26,7 +38,7 @@ async function getPropertyById(id: string) {
     const data = await response.json();
     
     // Determine the structure of the response
-    let properties;
+    let properties: Property[];
     if (Array.isArray(data)) {
       // Direct array response
       properties = data;
@@ -38,8 +50,8 @@ async function getPropertyById(id: string) {
       return null;
     }
     
-    // Find the specific property by ID
-    const property = properties.find((prop: any) => prop._id === id);
+    // Find the specific property by ID - now properly typed
+    const property = properties.find((prop: Property) => prop._id === id);
     console.log("Found property:", property);
     return property || null;
   } catch (error: unknown) {
@@ -49,11 +61,7 @@ async function getPropertyById(id: string) {
   }
 }
 
-export default async function RealEstateDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
-}) {
+export default async function RealEstateDetailPage({ params }: { params: Promise<{ id: string }> }){
   // Fix for the params warning - use Promise.resolve to ensure params is awaited
   const resolvedParams = await Promise.resolve(params);
   const id = resolvedParams.id;
@@ -94,7 +102,7 @@ export default async function RealEstateDetailPage({
             <div className="relative aspect-square w-full bg-gray-50">
               {!showFallback ? (
                 <Image
-                  src={property.image}
+                  src={property.image as string}
                   alt={property.name}
                   fill
                   className="object-cover"

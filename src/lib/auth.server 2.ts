@@ -4,11 +4,12 @@ import { verifyToken } from '@/lib/auth';
 // Server-only functions
 export async function getAuthCookie(): Promise<string | undefined> {
   const cookieStore = cookies();
-  return cookieStore.get('authToken')?.value;
+  return (await cookieStore).get('authToken')?.value;
 }
 
 export async function removeAuthCookie(): Promise<void> {
-  cookies().delete('authToken');
+  const cookieStore = cookies();
+  (await cookieStore).delete('authToken');
 }
 
 export async function getCurrentUser(): Promise<string | null> {

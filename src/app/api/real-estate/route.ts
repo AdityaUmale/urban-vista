@@ -5,6 +5,9 @@ import connectDB from "@/lib/db"
 export async function GET() {
   try {
     const db = await connectDB()
+    if (!db.connection?.db) {
+      throw new Error("Database connection not established");
+    }
     const realEstate = await db.connection.db
       .collection("realEstate")
       .find({})
@@ -72,6 +75,9 @@ export async function POST(request: Request) {
 
     console.log('Creating real estate property:', realEstate)
 
+    if (!db.connection?.db) {
+      throw new Error("Database connection not established");
+    }
     const result = await db.connection.db.collection("realEstate").insertOne(realEstate)
 
     if (!result.insertedId) {

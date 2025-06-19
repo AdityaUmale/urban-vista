@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Mess from '@/lib/models/Mess';
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       nonVegPrice, 
       timings, 
       applicationUrl, 
-      googleMapsUrl // Added googleMapsUrl
+      googleMapsUrl 
     } = body;
 
     if (!name || !address || !city || !createdBy) {
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       nonVegPrice,
       timings,
       applicationUrl,
-      googleMapsUrl, // Include googleMapsUrl here
+      googleMapsUrl,
     });
 
     await newMess.save();
@@ -56,24 +56,44 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error('Error creating mess listing:', error);
-    // Provide a more specific error message if possible
     const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json({ message: 'Error creating mess listing', error: errorMessage }, { status: 500 });
   }
 }
 
-// GET handler for fetching all mess listings
-export async function GET() {
+// GET handler for fetching a single mess listing
+export async function GET(
+  request: NextRequest,                               // you can also write Request here
+  { params }: { params: Promise<{ id: string }> }     // <- note Promise<…>
+) {
   try {
     await connectDB();
-    const messes = await Mess.find({}).sort({ createdAt: -1 }); // Sort by newest first
 
-    // Return the array directly
-    return NextResponse.json(messes, { status: 200 }); // Changed this line
+    // await the params promise, then destructure
+    const { id } = await params;
+
+    if (!id) {
+      return NextResponse.json(
+        { message: 'Mess ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const mess = await Mess.findById(id);
+
+    if (!mess) {
+      return NextResponse.json(
+        { message: 'Mess not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(mess);
   } catch (error) {
-    console.error('Error fetching mess listings:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
-    // Return an error object, which the frontend now handles
-    return NextResponse.json({ message: 'Error fetching mess listings', error: errorMessage }, { status: 500 });
+    console.error('Error fetching mess:', error);
+    return NextResponse.json(
+      { message: 'Error fetching mess' },
+      { status: 500 }
+    );
   }
 }

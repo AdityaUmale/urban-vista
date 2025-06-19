@@ -88,11 +88,11 @@ export default function FoodCard({ foodPlace }: FoodCardProps) {
               <p className="text-sm text-gray-500">No image available</p>
             </div>
           )}
-          {foodPlace.Rating && (
+          {foodPlace.rating && (
             <div className="absolute top-2 right-2">
               <Badge variant="outline" className="bg-white/90 backdrop-blur-sm">
                 <Star className="h-3 w-3 fill-amber-500 text-amber-500 mr-1" />
-                {foodPlace.Rating}
+                {foodPlace.rating}
               </Badge>
             </div>
           )}

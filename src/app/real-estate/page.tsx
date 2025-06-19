@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import AddRealEstateForm from "@/components/AddRealEstateForm"
-import RealEstateCard from "@/components/RealEstateCard"
+import { RealEstateCard } from "@/components/RealEstateCard"
 import { toast, Toaster } from "sonner"
 
 interface RealEstate {

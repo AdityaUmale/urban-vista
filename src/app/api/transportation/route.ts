@@ -5,7 +5,9 @@ import connectDB from "@/lib/db"
 export async function GET() {
   try {
     const db = await connectDB()
-    const transportation = await db.connection.db
+    const dbConnection = db.connection?.db ?? (await connectDB()).connection?.db
+    if (!dbConnection) throw new Error("Failed to establish database connection")
+    const transportation = dbConnection
       .collection("transportation")
       .find({})
       .sort({ createdAt: -1 })
@@ -74,7 +76,9 @@ export async function POST(request: Request) {
 
     console.log('Creating transportation service:', transportation)
 
-    const result = await db.connection.db.collection("transportation").insertOne(transportation)
+    const dbConnection = db.connection?.db ?? (await connectDB()).connection?.db
+    if (!dbConnection) throw new Error("Failed to establish database connection")
+    const result = await dbConnection.collection("transportation").insertOne(transportation)
 
     if (!result.insertedId) {
       throw new Error('Failed to insert transportation service')
