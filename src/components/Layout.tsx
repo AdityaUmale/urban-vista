@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui";
 import { ArrowRight, Building } from "lucide-react";
 
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -14,6 +15,8 @@ export const Layout = ({ children }: LayoutProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const prevScrollY = useRef(0);
   const heroSectionHeight = useRef(0);
+
+
 
   // Get hero section height on component mount
   useEffect(() => {
@@ -57,7 +60,7 @@ export const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   const handleLinkClick = () => {
-    window.open('https://urbanvista.com', '_blank');
+    window.location.href = '/signin';
   };
 
   return (
