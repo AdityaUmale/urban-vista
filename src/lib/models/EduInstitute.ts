@@ -8,10 +8,10 @@ const EduInstituteSchema = new mongoose.Schema({
     Description: String,
     Image: String,
     createdBy: String,
-    city: String, // Added city field
-    pdfUrl: String, // Added PDF URL field
-    pdfName: String, // Added PDF name field
-    googleMapsUrl: String, // Added Google Maps URL field
+    city: String,
+    pdfUrl: String, 
+    pdfName: String,
+    googleMapsUrl: String, 
 });
 
 const EduInstitute = mongoose.models.EduInstitute || mongoose.model('EduInstitute', EduInstituteSchema);
